@@ -1,3 +1,95 @@
+## **Pandas**
+---
+### **groupby**
+---
+- groupby + transform()
+~~~python
+[in]
+df = DataFrame({'group_1': ['a', 'a', 'a', 'a', 'b'], 
+                       'group_2': ['c', 'c', 'd', 'd','e'], 
+                       'col': [1, np.NaN, 4, 5, 6]})
+                    
+df['count_col'] = df.groupby(['group_1', 'group_2']).col.transform('count')
+df
+
+[out]
+	group_1	group_2	col	count_col
+0	a	       c	1.0	       1
+1	a	       c	NaN	       1
+2	a	       d	4.0	       2
+3	a	       d	5.0	       2
+4	b	       e	6.0	       1
+~~~
+~~~python
+[in]
+df['sum_col'] = df.groupby(['group_1', 'group_2']).col.transform('sum')
+df
+
+[out]
+	group_1	group_2	col	sum_col
+0	a	       c	1.0    1.0
+1	a	       c	NaN    1.0
+2	a	       d	4.0    9.0
+3	a	       d	5.0    9.0
+4	b	       e	6.0    6.0
+~~~
+~~~python
+[in]
+df['max_col'] = df.groupby(['group_1', 'group_2']).col.transform('max')
+df
+
+[out]
+	group_1	group_2	col	max_col
+0	a	       c	1.0    1.0
+1	a	       c	NaN    1.0
+2	a	       d	4.0    5.0
+3	a	       d	5.0    5.0
+4	b	       e	6.0    6.0
+~~~
+
+- groupby + pct_change()
+~~~python
+[in]
+df = pd.DataFrame({'country' : ['kor']*3 + ['jap']*3,
+                    'value' : [100,105,109,100,101,100]})
+                    
+df['pct_change'] = df.groupby(['country']).value.pct_change()
+df
+
+[out]
+	country	value	pct_change
+0	kor	       100	NaN
+1	kor	       105	0.050000
+2	kor	       109	0.038095
+3	jap	       100	NaN
+4	jap	       101	0.010000
+5	jap	       100	-0.009901
+~~~
+
+- groupby + pct_change() + transform() + cumprod()
+~~~python
+[in]
+df = pd.DataFrame({'country' : ['kor']*3 + ['jap']*3,
+                    'value' : [100,105,109,100,101,100]})
+df
+df['pct_change']=df.groupby(['country']).value.pct_change().transform(lambda x : x+1).cumprod()
+df
+
+[out]
+       country	value	cumulativeReturn
+0	kor	       100	       NaN
+1	kor	       105	       1.0500
+2	kor	       109	       1.0900
+3	jap	       100	       NaN
+4	jap	       101	       1.1009
+5	jap	       100	       1.0900
+~~~
+
+
+<br><br><br>
+
+
+
 ## **Numpy**
 ---
 ### **random**
@@ -138,7 +230,7 @@ Name: date, dtype: datetime64[ns]
 ~~~
 
 
-- datetime에 3개월 더하는 방법 (timedelta는 시간, 일, 주 단위 연산만 가능)
+- 분기 str format을 period[M] format으로 변환 (datetime은 분기 연산은 다루지 않음)
 ~~~python
 [in]
 quater = ['1923-1','1923-2','1923-3','1923-4']
@@ -245,6 +337,21 @@ pd.DataFrame(r.json()['OutBlock_1'])
 
 ~~~
 
+- content (한글 파일 다운로드)
+~~~python
+[in]
+mainUrl = 'https://www.alio.go.kr'
+fileNo = 129887
+addUrl = f'/rulefiledown.dn?fileNo={fileNo}'
+
+r = requests.get(mainUrl+addUrl)
+
+path = Path.home().joinpath('Desktop')
+
+with open(path/'download_file.hwp', 'wb') as f:
+    f.write(r.content)
+~~~
+
 ### **BeautifulSoup**
 ---
 - select()
@@ -281,3 +388,162 @@ pd.read_html(str(table))[0]
 1	외국인보유주식수(B)	3069826224
 2	외국인소진율(B/A)	51.42%
 ~~~
+<br><br><br>
+
+
+
+## **System OS**
+---
+### **sys & os**
+---
+- 모듈 경로 추가  
+PycharmProjects  
+|-- 현재 작업폴더  
+|&#160;&#160;&#160;&#160;&#160;&#160;&#160;|--현재작업파일.py  
+|-- 다른 폴더(모듈)  
+ &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;|--다른파일.py  
+~~~python
+[in]
+import sys
+parentPath='c:/Users/user/PycharmProjects' # parent 경로
+sys.path.append(parentPath) # 경로 추가
+
+from InPracticeEmploy import normalPayroll # from 다른 폴더(모듈) import 다른 파일
+~~~
+
+- directory 존재 여부 확인
+~~~python
+[in]
+import os
+path = 'c:/Users/user/PycharmProjects/InPracticeEmploy'
+os.path.isdir(path)
+
+[out]
+True
+~~~
+
+- file 존재 여부 확인
+~~~python
+[in]
+import os
+path='c:/Users/user/PycharmProjects/InPracticeEmploy/normalPayroll.py'
+os.path.isfile(path)
+
+[out]
+True
+~~~
+
+- directory 또는 file 존재 여부 확인
+~~~python
+[in]
+import os
+dirPath = 'c:/Users/user/PycharmProjects/InPracticeEmploy'
+filePath='c:/Users/user/PycharmProjects/InPracticeEmploy/normalPayroll.py'
+print(os.path.exists(dirPath))
+print(os.path.exists(filePath))
+
+[out]
+True
+True
+~~~
+
+- folder 생성하기
+~~~python
+[in]
+import os
+dirPath = Path.home().joinpath('Desktop')/'testFolder'
+os.makedirs(dirPath)
+~~~
+
+### **pathlib**
+---
+- 사용자 경로 객체 출력
+~~~python
+[in]
+from pathlib import Path
+
+Path.home()
+
+[out]
+WindowsPath('C:/Users/user')
+~~~
+
+- 현재작업 폴더 객체 출력
+~~~python
+[in]
+Path.cwd()
+
+[out]
+WindowsPath('c:/Users/user/PycharmProjects/PythonGuide')
+~~~
+~~~python
+[in]
+# 현재경로 출력
+Path('.')
+
+[out]
+WindowsPath('.')  # Path.cwd()와 동일한 결과임
+~~~
+
+- 절대경로로 변환
+~~~python
+[in]
+path = Path('.')
+path.absolute()
+
+[out]
+WindowsPath('c:/Users/user/PycharmProjects/PythonGuide')
+~~~
+
+- 경로 이어 붙이기
+~~~python
+[in]
+# 바탕화면 경로
+path1 = Path.home().joinpath('Desktop', 'README.md')
+# 위와 동일한 결과
+path2 = Path.home() / 'Desktop' / 'README.md'
+print(path1, path2, sep='\n')
+
+[out]
+C:\Users\user\Desktop
+C:\Users\user\Desktop
+~~~
+
+- 부모 경로 출력
+~~~python
+# 상위 부모 경로 출력
+[in]
+path = Path.home().joinpath('Desktop', 'README.md')
+path.parent
+
+[out]
+WindowsPath('C:/Users/user/Desktop')
+~~~
+~~~python
+# 모든 부모 경로를 리스트로 반환
+[in]
+path = Path.home().joinpath('Desktop', 'README.md')
+list(path.parents)
+
+[out]
+[WindowsPath('C:/Users/user/Desktop'),
+ WindowsPath('C:/Users/user'),
+ WindowsPath('C:/Users'),
+ WindowsPath('C:/')]
+~~~
+
+- 파일 이름, 파일 확장자 출력
+~~~python
+# 상위 부모 경로 출력
+[in]
+path = Path.home().joinpath('Desktop', 'README.md')
+fileName = path.name # 파일 이름
+fileSuffix = path.suffix # 파일 확장자
+print(fileName, fileSuffix, sep='\n')
+
+[out]
+README.md
+.md
+~~~
+
+<br><br><br>
