@@ -1,5 +1,127 @@
 ## **Pandas**
 ---
+### **DataFrame & Series**
+---
+- pd.DataFrame()에서 row의 length가 하나일때 발생하는 error  
+  ! 주의 : 아래 예시는 np.random.randint(0,10,size=(1,5))의 return값이 array([[3, 9, 6, 5, 9]])으로 2차원 배열이기 때문에 배열의 각 원소를 value로 인식하지 않고 array([[3, 9, 6, 5, 9]]) 전체를 하나의 원소(scalar)로 취급하기 때문에 index에러가 발생함. 1차원 배열을 입력해야 의도한 대로 5행 2열의 DataFrame을 얻을 수 있음
+  
+~~~python
+[in]
+data = {
+    'col1' : np.random.randint(0,10,size=(1,5)),
+    'col2' : np.random.randint(0,10,size=(1,5))
+}
+
+df = pd.DataFrame(data)
+df
+
+[out]
+[...]
+ValueError: If using all scalar values, you must pass an index
+~~~
+~~~python
+[in]
+data = {
+    'col1' : np.random.randint(0,10,size=(5)),
+    'col2' : np.random.randint(0,10,size=(5))
+}
+
+df = pd.DataFrame(data)
+df
+
+[out]
+	col1	col2
+0	1      	1
+1	5      	2
+2	7      	3
+3	6      	6
+4	3      	9
+~~~
+
+### **Data 조회**
+---
+- loc와 iloc의 차이
+~~~python
+df
+	col1	col2
+0	1      	1
+1	5      	2
+2	7      	3
+3	6      	6
+4	3      	9
+~~~
+
+~~~python
+[in]
+df.iloc[2:3]
+
+[out]
+	col1	col2
+2	7      	3
+~~~
+~~~python
+[in]
+df.loc[2:3]
+
+[out]
+	col1	col2
+2	7      	3
+3	6      	6
+~~~
+
+### **Series.str**
+---
+- Series.str.contains(string/pattern, case=True/False, regex=True/False)  
+  : case는 대소문자 구별여부, regex는 정규식 표현 여부임
+~~~python
+df
+col1	col2
+0	1	apple
+1	2	abcde
+2	3	lelele
+3	4	Ppa
+4	5	xyzab
+5	6	123
+~~~
+
+~~~python
+[in]
+con = df.col2.str.contains('pp', case=False, regex=False)
+df.loc[con]
+
+[out]
+	col1	col2
+0	1      	apple
+3	4      	Ppa
+~~~
+~~~python
+[in]
+con = df.col2.str.contains('a+', case=False, regex=True)
+df.loc[con]
+
+[out]
+	col1	col2
+0	1      	apple
+1	2      	abcde
+3	4      	Ppa
+4	5      	xyzab
+~~~
+
+- Series.str.extract() : 정규식으로 표현된 그룹을 추출하여 새로운 열로 반환
+~~~python
+[in]
+df.col2.str.extract(r"(a+)")
+
+[out]
+	0
+0	a
+1	a
+2	NaN
+3	a
+4	a
+5	NaN
+~~~
+
 ### **groupby**
 ---
 - groupby + transform()
@@ -71,18 +193,21 @@ df
 [in]
 df = pd.DataFrame({'country' : ['kor']*3 + ['jap']*3,
                     'value' : [100,105,109,100,101,100]})
+df['pct_change']=df.groupby(['country']).value.pct_change()
+df['cumulativeReturn']=df.groupby(['country'])['pct_change'].transform(lambda x : x+1)
+df['cumulativeReturn']=df.groupby(['country'])['cumulativeReturn'].cumprod()
 df
-df['pct_change']=df.groupby(['country']).value.pct_change().transform(lambda x : x+1).cumprod()
-df
+
+# df.groupby(['country']).value.pct_change().transform(lambda x : x+1).cumprod()  -> 이렇게 하지 않도록 주의!
 
 [out]
        country	value	cumulativeReturn
 0	kor	       100	       NaN
-1	kor	       105	       1.0500
-2	kor	       109	       1.0900
+1	kor	       105	       1.05
+2	kor	       109	       1.09
 3	jap	       100	       NaN
-4	jap	       101	       1.1009
-5	jap	       100	       1.0900
+4	jap	       101	       1.01
+5	jap	       100	       1.00
 ~~~
 
 
