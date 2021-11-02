@@ -1,3 +1,138 @@
+## **Dictionary**
+---
+### **dictionary 기본**
+---
+- dictionary 생성
+  
+~~~python
+[in]
+dic = {}
+for i in range(0,4) :
+    dic[f'key_{i}'] = i
+dic
+
+[out]
+{'key_0': 0, 'key_1': 1, 'key_2': 2, 'key_3': 3}
+~~~
+~~~python
+[in]
+withdrawal = {}
+
+symbols = ['AAPL', 'NVDA', 'AMZN']
+for symbol in symbols:
+    withdrawal[symbol] = {'unitPrice': 0, 'amounts': 0}
+withdrawal
+
+[out]
+{'AAPL': {'unitPrice': 0, 'amounts': 0}, 'NVDA': {'unitPrice': 0, 'amounts': 0}, 'AMZN': {'unitPrice': 0, 'amounts': 0}}
+~~~
+
+- 요소 삭제
+~~~python
+[in]
+dic = {1: 'a', 'name':'pey', 3:[1,2,3]}
+
+del dic[1]
+dic
+
+[out]
+{'name': 'pey', 3: [1, 2, 3]}
+~~~
+
+- dic.keys()
+~~~python
+[in]
+dic = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
+print(dic.keys())
+print(list(dic.keys()))
+
+[out]
+dict_keys(['name', 'phone', 'birth'])
+['name', 'phone', 'birth']
+~~~
+
+- dic.values()
+~~~python
+[in]
+dic = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
+dic.values()
+
+[out]
+dict_values(['pey', '0119993323', '1118'])
+~~~
+
+- key, value 쌍 얻기(items)
+~~~python
+[in]
+dic = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
+dic.items()
+
+[out]
+dict_items([('name', 'pey'), ('phone', '0119993323'), ('birth', '1118')])
+~~~
+
+- Dictionnary 결합
+~~~python
+[in]
+dic1 = {1:10, 2:20}
+dic2 = {1:100, 3:300}
+
+dic1.update(dic2)
+
+[out]
+{1: 100, 2: 20, 3: 300}
+~~~
+
+
+- Key: Value 쌍 모두 지우기(clear)
+~~~python
+[in]
+dic = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
+dic.clear()
+dic
+
+[out]
+{}
+~~~
+
+- Key로 Value얻기(get)  
+  ! dic.get('name')은 dic['name']을 사용했을 때와 동일한 결괏값이지만, 해당키가 없을시 에러 대신 None값을 반환  
+  ! 딕셔너리 안에 찾으려는 Key 값이 없을 경우 미리 정해 둔 디폴트 값을 대신 가져오게 하고 싶을 때에는 get(x, '디폴트 값')을 사용
+~~~python
+[in]
+dic = {'name':'pey', 'phone':'0119993323', 'birth': '1118'}
+print(dic.get('name'))
+print(dic.get('nokey'))
+
+[out]
+pey
+None
+~~~
+~~~python
+[in]
+dic = {'name':'pey', 'phone':'0119993323', 'birth': '1118'}
+dic.get('foo', 'bar')
+
+[out]
+bar
+~~~
+
+- 해당 Key가 딕셔너리 안에 있는지 조사하기(in)
+~~~python
+[in]
+dic = {'name':'pey', 'phone':'0119993323', 'birth': '1118'}
+print('name' in dic)
+print('email' in dic)
+
+[out]
+True
+False
+~~~
+
+<br><br><br>
+
+
+
 ## **Pandas**
 ---
 ### **DataFrame & Series**
@@ -138,13 +273,13 @@ df.apply(lambda row: row.str.cat(sep='&'), axis=1)
   : case는 대소문자 구별여부, regex는 정규식 표현 여부임
 ~~~python
 df
-col1	col2
-0	1	apple
-1	2	abcde
-2	3	lelele
-3	4	Ppa
-4	5	xyzab
-5	6	123
+  col1 col2
+0  1   apple
+1  2   abcde
+2  3   lelele
+3  4   Ppa
+4  5   xyzab
+5  6   123
 ~~~
 
 ~~~python
@@ -242,13 +377,13 @@ df['pct_change'] = df.groupby(['country']).value.pct_change()
 df
 
 [out]
-	country	value	pct_change
-0	kor	       100	NaN
-1	kor	       105	0.050000
-2	kor	       109	0.038095
-3	jap	       100	NaN
-4	jap	       101	0.010000
-5	jap	       100	-0.009901
+  country value pct_change
+0 kor     100   NaN
+1 kor     105   0.050000
+2 kor     109   0.038095
+3 jap     100   NaN
+4 jap     101   0.010000
+5 jap     100  -0.009901
 ~~~
 
 - groupby + pct_change() + transform() + cumprod()
