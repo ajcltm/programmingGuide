@@ -71,6 +71,69 @@ df.loc[2:3]
 
 ### **Series.str**
 ---
+- Series.str.strip()
+  : 맨 왼쪽과 오른쪽의 공백문자 제거(가운데 공백문자는 제거 하지 않음)
+~~~python
+df = pd.DataFrame(
+    np.random.randn(3, 2), columns=[" Column A ", " Column B "], index=range(3)
+)
+df
+    Column A    Column B
+0   -0.020580    0.461255
+1   -1.251339   -1.173025
+2   -0.445028   -0.658810
+~~~
+
+~~~python
+[in]
+df.columns.str.strip()
+
+[out]
+Index(['Column A', 'Column B'], dtype='object')
+~~~
+
+- Series.str.replace()
+  : 특정 문자를 다른 문자로 대체함(공백문자 제거에 활용할 수 있음)
+~~~python
+s = pd.Series(["ab c", "c de ", np.nan, " f g h "], dtype="string")
+s
+0       ab c
+1      c de
+2       <NA>
+3     f g h
+~~~
+
+~~~python
+[in]
+s.str.replace(' ','')
+
+[out]
+0     abc
+1     cde
+2    <NA>
+3     fgh
+~~~
+
+- Series.str.cat()
+  : series의 각 원소를 하나의 str로 합침
+~~~python
+df = pd.DataFrame({'ticker':['005930', '000829'],
+                    'name':['samsung', 'dongsan']})
+df
+   ticker     name
+0  005930  samsung
+1  000829  dongsan
+~~~
+
+~~~python
+[in]
+df.apply(lambda row: row.str.cat(sep='&'), axis=1)
+
+[out]
+0    005930&samsung
+1    000829&dongsan
+~~~
+
 - Series.str.contains(string/pattern, case=True/False, regex=True/False)  
   : case는 대소문자 구별여부, regex는 정규식 표현 여부임
 ~~~python
