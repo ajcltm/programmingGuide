@@ -1,3 +1,180 @@
+## **Dataclass**
+---
+### **Dataclass**
+---
+- 정의 및 비교
+  
+~~~python
+[in]
+from dataclasses import dataclass
+
+@dataclass
+class Car:
+    name: str
+    brand: str
+    price: int
+
+
+car1 = Car('Model X', 'Tesla', 120_000)
+car2 = Car('Model X', 'Tesla', 120_000)
+
+print(car1 == car2)
+print(car2.name)
+
+[out]
+True
+Model X
+~~~
+
+- 비교 제외, 프린트 제외, default값 입력
+  
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str = field(compare=False)  # 비교 대상에서 제외
+    brand: str = field(repr=False)  # 프린트할때 감추기
+    price: int = 120_000
+    condition: str = field(default='New') # default값 정의
+
+
+car1 = Car('Model X', 'Tesla', 120_000)
+car2 = Car('Model Y', 'Tesla', 120_000)
+
+print(car1 == car2)
+print(car2)
+
+[out]
+True
+Car(name='Model Y', price=120000, condition='New')
+~~~
+
+- Overriding
+  
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str = field(compare=False)
+    brand: str = field(repr=False)
+    price: int = 120_000
+    condition: str = field(default='New')
+
+    def __post_init__(self):
+        if self.condition == "Old":
+            self.price -= 30_000
+
+old_car = Car('Model X', 'Tesla', 130_000, 'Old')
+
+print(old_car)
+
+[out]
+Car(name='Model X', price=90000, condition='Old')
+~~~
+
+- dataclass List
+  
+~~~python
+[in]
+ffrom dataclasses import dataclass
+from typing import List
+
+@dataclass
+class Car:
+    name: str # Supports tying out of the box!
+    brand: str
+    price: int
+
+@dataclass
+class CarDealer:
+    cars: List[Car]
+
+
+car3 = Car('Model S', 'Tesla', 89_000)
+car4 = Car('Model Y', 'Tesla', 54_000)
+car_dealer = CarDealer(cars=[car3, car4])
+
+print(car_dealer)
+
+[out]
+CarDealer(cars=[Car(name='Model S', brand='Tesla', price=89000), Car(name='Model Y', brand='Tesla', price=54000)])
+~~~
+
+- dataclass dict
+  
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str 
+    brand: str
+    price: int
+
+@dataclass
+class CarDealer:
+    date : str
+    name : str
+    car: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        self.car['car'] = Car(self.name, 'tesla', '120000')
+
+car = CarDealer(date='20100101', name='tesla')
+print(car)
+
+[out]
+CarDealer(date='20100101', name='tesla', car={'car': Car(name='tesla', brand='tesla', price='120000')})
+~~~
+
+## **List**
+---
+### **List 랜덤 추출**
+---
+- random.choice(lst)   
+  ! 한가지 요소만 랜덤 추출
+  
+~~~python
+[in]
+import random 
+lst = [1, 2, 3]
+choiceLst = random.choice(lst)
+
+[out]
+1
+~~~
+
+- random.sample(lst, n)   
+  ! n개의 요소를 리스트로 랜덤 추출(중복 허용하지 않음)
+  
+~~~python
+[in]
+import random 
+lst = [1, 2, 3]
+sampleLst = random.sample(lst, 2)
+
+[out]
+[2, 3]
+~~~
+
+- 중복 허용하면서 랜덤 추출 하는 방법
+~~~python
+[in]
+li = [1, 2, 3]
+choiceLst = [random.choice(li) for i in range(5)]
+
+[out]
+[1, 3, 2, 3, 3]
+~~~
+<br><br><br>
+
+
+
 ## **Dictionary**
 ---
 ### **dictionary 기본**
@@ -203,6 +380,32 @@ df.loc[2:3]
 2	7      	3
 3	6      	6
 ~~~
+
+### **Data 전처리**
+---
+- to_numeric()  
+ : DataFrame 이나 Series 내 문자열 칼럼을 숫자형으로 변환
+ ! 수치평으로 변환이 불가능한 값이 있을 경우, 인자 옵션은 errors = 'raise'(에러메시지 띄움), 'coerce'(nan 반환), 'ignore'(무시하고 원래값 반환)
+~~~python
+df
+   col_1  col_2
+0      1    4.0
+1      2    bbb
+2      3    6.0
+~~~
+
+~~~python
+[in]
+df = df.apply(pd.to_numeric, errors = 'coerce')
+print(df)
+
+[out]
+   col_1  col_2
+0      1    4.0
+1      2    NaN
+2      3    6.0
+~~~
+
 
 ### **Series.str**
 ---
