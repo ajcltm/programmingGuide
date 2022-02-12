@@ -1,136 +1,672 @@
-## **Dataclass**
+## **문자열**
 ---
-### **Dataclass**
+### **따옴표 처리**
 ---
-- 정의 및 비교
-  
+- 문자열에 문자열 ' 를 넣을 땐 문자열 " 으로 감싼다
 ~~~python
 [in]
-from dataclasses import dataclass
-
-@dataclass
-class Car:
-    name: str
-    brand: str
-    price: int
-
-
-car1 = Car('Model X', 'Tesla', 120_000)
-car2 = Car('Model X', 'Tesla', 120_000)
-
-print(car1 == car2)
-print(car2.name)
+food = "Python's favorite food is perl"
+print(food)
 
 [out]
-True
-Model X
+"Python's favorite food is perl"
 ~~~
 
-- 비교 제외, 프린트 제외, default값 입력
-  
+- 문자열에 문자열 " 를 넣을 땐 문자열 ' 으로 감싼다
 ~~~python
 [in]
-from dataclasses import dataclass, field
-
-@dataclass
-class Car:
-    name: str = field(compare=False)  # 비교 대상에서 제외
-    brand: str = field(repr=False)  # 프린트할때 감추기
-    price: int = 120_000
-    condition: str = field(default='New') # default값 정의
-
-
-car1 = Car('Model X', 'Tesla', 120_000)
-car2 = Car('Model Y', 'Tesla', 120_000)
-
-print(car1 == car2)
-print(car2)
+say = '"Python is very easy." he says.'
+print(say)
 
 [out]
-True
-Car(name='Model Y', price=120000, condition='New')
+"Python is very easy." he says.
 ~~~
 
-- Overriding
-  
+- 백슬러시 \ 를 사용해서 기호를 인식 시킨다.
 ~~~python
 [in]
-from dataclasses import dataclass, field
-
-@dataclass
-class Car:
-    name: str = field(compare=False)
-    brand: str = field(repr=False)
-    price: int = 120_000
-    condition: str = field(default='New')
-
-    def __post_init__(self):
-        if self.condition == "Old":
-            self.price -= 30_000
-
-old_car = Car('Model X', 'Tesla', 130_000, 'Old')
-
-print(old_car)
+food = 'Python\'s favorite food is perl'
+say = "\"Python is very easy.\" he says."
+print(food)
+print(say)
 
 [out]
-Car(name='Model X', price=90000, condition='Old')
+"Python's favorite food is perl"
+"Python is very easy." he says.
 ~~~
 
-- dataclass List
-  
+<br><br><br>
+
+
+### **줄바꾸기**
+---
 ~~~python
 [in]
-ffrom dataclasses import dataclass
-from typing import List
-
-@dataclass
-class Car:
-    name: str # Supports tying out of the box!
-    brand: str
-    price: int
-
-@dataclass
-class CarDealer:
-    cars: List[Car]
-
-
-car3 = Car('Model S', 'Tesla', 89_000)
-car4 = Car('Model Y', 'Tesla', 54_000)
-car_dealer = CarDealer(cars=[car3, car4])
-
-print(car_dealer)
+multiline = "Life is too short\nYou need python"
+print(multiline)
 
 [out]
-CarDealer(cars=[Car(name='Model S', brand='Tesla', price=89000), Car(name='Model Y', brand='Tesla', price=54000)])
+Life is too short
+You need python
 ~~~
 
-- dataclass dict
-  
 ~~~python
 [in]
-from dataclasses import dataclass, field
-
-@dataclass
-class Car:
-    name: str 
-    brand: str
-    price: int
-
-@dataclass
-class CarDealer:
-    date : str
-    name : str
-    car: dict = field(default_factory=dict)
-
-    def __post_init__(self):
-        self.car['car'] = Car(self.name, 'tesla', '120000')
-
-car = CarDealer(date='20100101', name='tesla')
-print(car)
+multiline_1= '''
+            Life is too short
+            You need python
+            '''
+multiline_2= """
+            Life is too short
+            You need python
+            """
+print(multiline_1)
+print(multiline_2)
 
 [out]
-CarDealer(date='20100101', name='tesla', car={'car': Car(name='tesla', brand='tesla', price='120000')})
+Life is too short
+You need python
+
+Life is too short
+You need python
 ~~~
+
+- 이스케이프 코드 : 프로그래밍할 때 사용할 수 있도록 미리 정의해 둔 "문자 조합"이다. 주로 출력물을 보기 좋게 정렬하는 용도로 사용
+
+
+|코드| 설명|
+|---|---|
+|\n|문자열 안에서 줄을 바꿀 때 사용|
+|\t|문자열 사이에 탭 간격을 줄 때 사용|
+| \ \ |문자 \를 그대로 표현할 때 사용|
+|\'|작은따옴표(')를 그대로 표현할 때 사용|
+|\"|큰따옴표(")를 그대로 표현할 때 사용|
+|\r|캐리지 리턴(줄 바꿈 문자, 현재 커서를 가장 앞으로 이동)|
+|\f|폼 피드(줄 바꿈 문자, 현재 커서를 다음 줄로 이동)|
+|\a|벨 소리(출력할 때 PC 스피커에서 '삑' 소리가 난다)|
+|\b|백 스페이스|
+|\000| 널 문자|
+
+<br><br><br>
+
+### **문자열 연산**
+---
+- 문자열 더하기
+~~~python
+[in]
+head = "Python"
+tail = " is fun!"
+print(head + tail)
+
+
+[out]
+'Python is fun!'
+~~~
+
+- 문자열 곱하기
+~~~python
+[in]
+a = "python"
+a * 2
+
+print(a * 2)
+
+[out]
+'pythonpython'
+~~~
+
+- 문자열 길이 구하기
+~~~python
+[in]
+a = "Life is too short"
+print(len(a))
+
+[out]
+17
+~~~
+
+<br><br><br>
+
+### **문자열 인덱싱**
+---
+~~~python
+[in]
+a = "Life is too short, You need Python"
+a[3]
+a[0]
+a[12]
+a[-1]
+a[-5]
+a[0:4]
+a[0:3]
+a[19:-7]
+
+
+[out]
+'e'  #  a[3]
+'L'  #  a[0]
+'s'  #  a[12]
+'n'  #  a[-1]
+'y'  #  a[-5]
+'Life'  # a[0:4]
+'Lif'  # a[0:3]     0 <= a < 3
+'You need'  # a[19:-7]
+~~~
+
+~~~python
+[in]
+a = "20010331Rainy"
+date = a[:8]
+weather = a[8:]
+print(date)
+print(weather)
+[out]
+'20010331'
+'Rainy'
+~~~
+
+### **문자열 포맷팅**
+---
+- 숫자 바로 대입
+~~~python
+[in]
+"I eat %d apples." % 3
+
+[out]
+'I eat 3 apples.'
+~~~
+
+- 문자열 바로 대입
+~~~python
+[in]
+"I eat %s apples." % "five"
+[out]
+'I eat five apples.'
+~~~
+
+- 숫자 값을 나타내는 변수로 대입
+~~~python
+[in]
+number = 3
+"I eat %d apples." % number
+[out]
+'I eat 3 apples.'
+~~~
+
+- 2개 이상의 값 넣기
+~~~python
+[in]
+number = 10
+day = "three"
+"I ate %d apples. so I was sick for %s days." % (number, day)
+
+[out]
+'I ate 10 apples. so I was sick for three days.'
+~~~
+
+- %s 포맷 코드
+~~~python
+[in]
+"I have %s apples" % 3
+[out]
+'I have 3 apples'
+~~~
+~~~python
+[in]
+"rate is %s" % 3.234
+
+[out]
+'rate is 3.234'
+~~~
+
+- 포매팅 연산자 %d와 %를 같이 쓸 때는 %%를 쓴다
+~~~python
+[in]
+"Error is %d%." % 98
+[out]
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+ValueError: incomplete format
+~~~
+~~~python
+[in]
+"Error is %d%%." % 98
+
+[out]
+'Error is 98%.'
+~~~
+
+
+- 정렬과 공백
+~~~python
+[in]
+"%10s" % "hi"
+[out]
+'        hi'
+~~~
+~~~python
+[in]
+"%-10sjane." % 'hi'
+[out]
+'hi        jane.'
+~~~
+
+- 소수점 표현하기
+~~~python
+[in]
+ "%0.4f" % 3.42134234
+[out]
+'3.4213'
+~~~
+~~~python
+[in]
+"%10.4f" % 3.42134234
+
+[out]
+'    3.4213'
+~~~
+
+- 문자열 포맷 코드
+
+|코드| 설명|
+|---|---|
+|%s	|문자열(String)|
+|%c	|문자 1개(character)|
+|%d	|정수(Integer)|
+|%f	|부동소수(floating-point)|
+|%o	|8진수|
+|%x	|16진수|
+|%%	|Literal % (문자 % 자체)|
+
+
+<br><br><br>
+
+
+### **format 함수를 사용한 포매팅**
+---
+- 숫자 바로 대입하기
+~~~python
+[in]
+ "I eat {0} apples".format(3)
+
+[out]
+'I eat 3 apples'
+~~~
+
+- 문자열 바로 대입하기
+~~~python
+[in]
+"I eat {0} apples".format("five")
+
+[out]
+'I eat five apples'
+
+- 숫자 값을 가진 변수로 대입하기
+~~~
+
+~~~python
+[in]
+number = 3
+"I eat {0} apples".format(number)
+
+[out]
+'I eat 3 apples'
+~~~
+
+- 2개 이상의 값 넣기
+~~~python
+[in]
+number = 10
+day = "three"
+"I ate {0} apples. so I was sick for {1} days.".format(number, day)
+
+[out]
+'I ate 10 apples. so I was sick for three days.'
+~~~
+
+- 이름으로 넣기
+~~~python
+[in]
+"I ate {number} apples. so I was sick for {day} days.".format(number=10, day=3)
+
+
+[out]
+'I ate 10 apples. so I was sick for 3 days.'
+~~~
+
+- 인덱스와 이름을 혼용해서 넣기
+~~~python
+[in]
+"I ate {0} apples. so I was sick for {day} days.".format(10, day=3)
+
+[out]
+'I ate 10 apples. so I was sick for 3 days.'
+~~~
+
+- 왼쪽 정렬
+~~~python
+[in]
+"{0:<10}".format("hi")
+
+[out]
+'hi        '
+~~~
+
+- 오른쪽 정렬
+~~~python
+[in]
+"{0:>10}".format("hi")
+
+[out]
+'        hi'
+~~~
+
+- 가운데 정렬
+~~~python
+[in]
+"{0:^10}".format("hi")
+
+[out]
+'    hi    '
+~~~
+
+- 공백 채우기
+~~~python
+[in]
+"{0:=^10}".format("hi")
+
+
+[out]
+'====hi===='
+~~~
+~~~python
+[in]
+"{0:!<10}".format("hi")
+
+
+[out]
+'hi!!!!!!!!'
+~~~
+
+-소수점 표현하기
+~~~python
+[in]
+y = 3.42134234
+"{0:0.4f}".format(y)
+
+[out]
+'3.4213'
+~~~
+~~~python
+[in]
+"{0:10.4f}".format(y)
+[out]
+'    3.4213'
+~~~
+
+- { 또는 } 문자 표현하기
+~~~python
+[in]
+"{{ and }}".format()
+[out]
+'{ and }'
+~~~
+
+<br><br><br>
+
+### **f 문자열 포매팅**
+---
+~~~python
+[in]
+name = '홍길동'
+age = 30
+f'나의 이름은 {name}입니다. 나이는 {age}입니다.'
+
+[out]
+'나의 이름은 홍길동입니다. 나이는 30입니다.
+~~~
+
+
+~~~python
+[in]
+age = 30
+f'나는 내년이면 {age+1}살이 된다.'
+
+[out]
+'나는 내년이면 31살이 된다.'
+~~~
+
+~~~python
+[in]
+d = {'name':'홍길동', 'age':30}
+f'나의 이름은 {d["name"]}입니다. 나이는 {d["age"]}입니다.'
+
+[out]
+'나의 이름은 홍길동입니다. 나이는 30입니다.'
+~~~
+
+~~~python
+[in]
+f'{"hi":<10}'  # 왼쪽 정렬
+f'{"hi":>10}'  # 오른쪽 정렬
+f'{"hi":^10}'  # 가운데 정렬
+
+[out]
+'hi        '
+'        hi'
+'    hi    '
+~~~
+
+~~~python
+[in]
+f'{"hi":=^10}'  # 가운데 정렬하고 '=' 문자로 공백 채우기
+f'{"hi":!<10}'  # 왼쪽 정렬하고 '!' 문자로 공백 채우기
+
+[out]
+'====hi===='
+'hi!!!!!!!!'
+~~~
+
+~~~python
+[in]
+y = 3.42134234
+f'{y:0.4f}'  # 소수점 4자리까지만 표현
+f'{y:10.4f}'  # 소수점 4자리까지 표현하고 총 자리수를 10으로 맞춤
+
+[out]
+'3.4213'
+'    3.4213'
+~~~
+
+~~~python
+[in]
+f'{{ and }}'
+
+[out]
+'{ and }'
+~~~
+
+### **0으로 시작하는 문자열 만들기**
+---
+~~~python
+[in]
+print ("%05d"% 5)
+print (format(5000,'05')) 
+print ('{0:05d}'.format(273))
+
+[out]
+00005
+05000
+00273
+~~~
+
+~~~python
+[in]
+num = 37
+num_str = str(num)
+
+print(num_str.zfill(3))
+print(num_str.zfill(5))
+
+num = 12345
+num_str = str(num)
+
+print(num_str.zfill(3))
+[out]
+037
+00037
+12345
+~~~
+
+<br><br><br>
+
+
+### **문자열 관련 함수들**
+---
+- 문자 개수 세기(count)
+~~~python
+[in]
+a = "hobby"
+a.count('b')
+
+[out]
+2
+~~~
+- 위치 알려주기1(find)
+~~~python
+[in]
+a = "Python is the best choice"
+a.find('b')
+a.find('k')
+
+[out]
+14  # 문자열 중 문자 b가 처음으로 나온 위치를 반환
+-1  # 문자나 문자열이 존재하지 않으면 -1을 반환
+~~~
+
+- 위치 알려주기2(index)
+~~~python
+[in]
+a = "Life is too short"
+a.index('t')
+
+[out]
+8   # 맨 처음으로 나온 위치를 반환
+~~~
+
+~~~python
+[in]
+a = "Life is too short"
+a.index('k')
+
+[out]
+#  존재하지 않는 문자를 찾으면 오류가 발생
+
+File "<stdin>", line 1, in <module>
+ValueError: substring not found
+~~~
+
+- 문자열 삽입(join)
+~~~python
+[in]
+",".join('abcd')
+
+[out]
+'a,b,c,d'
+~~~
+
+- 소문자를 대문자로 바꾸기(upper)
+~~~python
+[in]
+a = "hi"
+a.upper()
+
+[out]
+'HI'
+~~~
+
+- 대문자를 소문자로 바꾸기(lower)
+~~~python
+[in]
+a = "HI"
+a.lower()
+
+[out]
+'hi'
+~~~
+
+- 왼쪽 공백 지우기(lstrip)
+~~~python
+[in]
+a = " hi "
+a.lstrip()
+
+[out]
+'hi '
+~~~
+
+- 오른쪽 공백 지우기(rstrip)
+~~~python
+[in]
+a= " hi "
+a.rstrip()
+
+[out]
+' hi'
+~~~
+
+- 양쪽 공백 지우기(strip)
+~~~python
+[in]
+a = " hi "
+a.strip()
+
+[out]
+'hi'
+~~~
+
+~~~python
+[in]
+text = '"okNoProblem"'
+print(text)
+print(text.strip(' " '))
+
+[out]
+"okNoProblem"       # text
+okNoProblem         # text.strip(' " ')
+~~~
+
+- 문자열 바꾸기(replace)
+~~~python
+[in]
+a = "Life is too short"
+a.replace("Life", "Your leg")
+
+
+[out]
+'Your leg is too short'
+~~~
+
+- 문자열 나누기(split)
+~~~python
+[in]
+a = "Life is too short"
+a.split()
+
+[out]
+['Life', 'is', 'too', 'short']
+~~~
+~~~python
+[in]
+b = "a:b:c:d"
+b.split(':')
+
+[out]
+['a', 'b', 'c', 'd']
+~~~
+
+<br><br><br>
+
 
 ## **List**
 ---
@@ -306,6 +842,190 @@ True
 False
 ~~~
 
+<br><br><br>
+
+## **Time**
+---
+### **time**
+---
+- 실행 속도 계산
+~~~python
+[in]
+start = time.time()
+time.sleep(5)
+end = time.time()
+
+print(f'duration : {end - start} seconds')
+
+[out]
+duration : 5.004604816436768 seconds
+~~~
+- random sleep
+~~~python
+class RandomSleep:
+
+    def sleep(self):
+        range_option = {'quicker': [0, .5], 'slower': [.5, 2], 'stop': [10, 15]}
+        sleepLevel = random.choices(['quicker', 'slower', 'stop'], weights=[.6, .39, .01])
+        range = range_option.get(sleepLevel[0])
+        if sleepLevel[0] == 'stop' : print('Now taking a rest in a seconds')
+        time.sleep(random.uniform(range[0], range[1]))
+~~~
+
+### **datetime**
+---
+
+- 현재 일자 및 시각 생성
+~~~python
+[in]
+datetime.now()
+
+[out]
+datetime.datetime(2021, 10, 15, 17, 27, 57, 116839)
+~~~
+
+- 특정 일자 생성
+~~~python
+[in]
+datetime.datetime(1923, 8, 29)
+
+[out]
+datetime.datetime(1923, 8, 29, 0, 0)
+~~~
+
+- datetime object를 str로 변환
+~~~python
+[in]
+date = datetime.datetime(1923, 8, 29)
+date.strftime(format='%Y-%m-%d')
+
+[out]
+'1923-08-29'
+~~~
+
+
+- str을 datetime object로 변환  
+! 주의 : 인자를 format='%Y-%m-%d'이라고 쓰면 안됨
+~~~python
+[in]
+date = '1923-8-29'
+datetime.datetime.strptime(date, '%Y-%m-%d')
+
+[out]
+datetime.datetime(1923, 8, 29, 0, 0)
+~~~
+
+- 기간 리스트 만들기
+~~~python
+[in]
+start = datetime.datetime.strptime("1923-08-29", "%Y-%m-%d")
+end = datetime.datetime.strptime("1923-09-03", "%Y-%m-%d")
+date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)]
+
+dayList = []
+for date in date_generated:
+    dayList.append(date.strftime("%Y%m%d"))
+
+dayList
+
+[out]
+['19230829', '19230830', '19230831', '19230901', '19230902']
+~~~
+
+- datetime에 3개월 더하는 방법 (timedelta는 시간, 일, 주 단위 연산만 가능)
+~~~python
+[in]
+from dateutil.relativedelta import relativedelta
+
+date = datetime.datetime(1923, 8, 29)
+date + relativedelta(months=3)
+
+[out]
+datetime.datetime(1923, 11, 29, 0, 0)
+~~~
+
+
+### **Pandas에서 시간 다루기**
+---
+- 특정열을 datetime 포맷으로 변경
+
+~~~python
+[in]
+date = ['1923-08-29','1923-08-30','1923-09-01','1923-09-02']
+df = pd.DataFrame(date, columns=['date'])
+pd.to_datetime(df['date'], format='%Y-%m-%d')
+
+[out]
+0   1923-08-29
+1   1923-08-30
+2   1923-09-01
+3   1923-09-02
+Name: date, dtype: datetime64[ns]
+~~~
+
+
+- 분기 str format을 period[M] format으로 변환 (datetime은 분기 연산은 다루지 않음)
+~~~python
+[in]
+quater = ['1923-1','1923-2','1923-3','1923-4']
+df = pd.DataFrame(quater, columns=['quater'])
+
+df['quater'].apply(lambda x:pd.Period(x[:-1] + "Q" + x[-1:], freq="M"))
+
+[out]
+# 월로 변환되었음(1923-3 -> 1923-07)
+0    1923-01 
+1    1923-04
+2    1923-07
+3    1923-10
+Name: quater, dtype: period[M]
+~~~
+<br><br><br>
+
+## **Numpy**
+---
+### **random**
+---
+- np.random.rand() : [0.0, 1.0] 임의값 반환하며 shape으로 입력 시 array 반환(미입력 시 scalar)
+
+~~~python
+[in]
+np.random.rand(2, 3)
+
+[out]
+array([[0.41140371, 0.98738577, 0.42903107],
+       [0.93806615, 0.45240497, 0.12544594]])
+~~~
+
+- np.random.random() : [0.0, 1.0) 임의값 반환하며, shape를 튜플로 입력해야함(미입력 시 scalar)
+~~~python
+[in]
+np.random.random((2,3))
+
+[out]
+array([[0.41140371, 0.98738577, 0.42903107],
+       [0.93806615, 0.45240497, 0.12544594]])
+~~~
+
+- np.random.randn() : 평균이 0이고 표준편차가 1인 정규분포의 임의값 반환 (가우시안 분포), shape으로 입력 시 array 반환(미입력 시 scalar)
+~~~python
+[in]
+np.random.randn(2,3)
+
+[out]
+array([[ 0.40054939,  0.30965968, -0.50036237],
+       [ 0.64300747,  1.56065243, -0.33234598]])
+~~~
+
+- np.random.randint() : 입력값들 사이의 정수를 반환함 (균등 분포), 인자는 다음과 같음 -> low : int, high:int (optional), size : int or tuple 
+~~~python
+[in]
+np.random.randint(-100, 100, size=(2,3))
+
+[out]
+array([[-62,  10,  -8],
+       [ 70,  36, -68]])
+~~~
 <br><br><br>
 
 
@@ -610,14 +1330,238 @@ df
 4	jap	       101	       1.01
 5	jap	       100	       1.00
 ~~~
+<br><br><br>
 
 
+## **Dataclass**
+---
+### **Dataclass**
+---
+- 정의 및 비교
+  
+~~~python
+[in]
+from dataclasses import dataclass
+
+@dataclass
+class Car:
+    name: str
+    brand: str
+    price: int
+
+
+car1 = Car('Model X', 'Tesla', 120_000)
+car2 = Car('Model X', 'Tesla', 120_000)
+
+print(car1 == car2)
+print(car2.name)
+
+[out]
+True
+Model X
+~~~
+
+- 비교 제외, 프린트 제외, default값 입력
+  
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str = field(compare=False)  # 비교 대상에서 제외
+    brand: str = field(repr=False)  # 프린트할때 감추기
+    price: int = 120_000
+    condition: str = field(default='New') # default값 정의
+
+
+car1 = Car('Model X', 'Tesla', 120_000)
+car2 = Car('Model Y', 'Tesla', 120_000)
+
+print(car1 == car2)
+print(car2)
+
+[out]
+True
+Car(name='Model Y', price=120000, condition='New')
+~~~
+
+- 대소 비교 가능하도록 설정
+~~~python
+[in]
+from dataclasses import dataclass
+
+@dataclass(order=True)
+class Book:
+    name: str
+    weight: float
+    shelf_id: int
+
+b1 = Book('I need Python',1.5,1267)		
+b2 = Book('You need Python',0.5,6453)
+
+print(b1>b2)
+
+[out]
+False		# 'I' < 'Y'
+~~~
+
+- 불변객체로 설정 (변경 시도하면 에러 발생시킴)
+~~~python
+[in]
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Book:
+    name: str
+    weight: float
+    shelf_id: int = 0
+
+test = Book('I need Python',1.5,1267)
+test.weight = 2.43
+print(test)
+
+[out]
+Traceback (most recent call last):
+  File line 11, in <module>
+    test.weight = 2.43
+  File "<string>", line 4, in __setattr__
+dataclasses.FrozenInstanceError: cannot assign to field 'weight'
+~~~
+
+- 중복된 dataclass 제거
+~~~python
+[in]
+from dataclasses import dataclass
+
+@dataclass(unsafe_hash=True)
+class Book:
+    name: str
+    weight: float
+    shelf_id: int
+
+b1 = Book('I need Python',1.5,1267)
+b2 = Book('You need Python',0.5,6453)
+b3 = Book('I need Python',1.5,1267)
+b4 = Book('You need Python',0.5,6453)
+
+print(set([b1,b2,b3,b4]))
+
+[out]
+{Book(name='I need Python', weight=1.5, shelf_id=1267), Book(name='You need Python', weight=0.5, shelf_id=6453)}
+~~~
+
+- Overriding
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str = field(compare=False)
+    brand: str = field(repr=False)
+    price: int = 120_000
+    condition: str = field(default='New')
+
+    def __post_init__(self):
+        if self.condition == "Old":
+            self.price -= 30_000
+
+old_car = Car('Model X', 'Tesla', 130_000, 'Old')
+
+print(old_car)
+
+[out]
+Car(name='Model X', price=90000, condition='Old')
+~~~
+
+- dataclass List
+  
+~~~python
+[in]
+ffrom dataclasses import dataclass
+from typing import List
+
+@dataclass
+class Car:
+    name: str # Supports tying out of the box!
+    brand: str
+    price: int
+
+@dataclass
+class CarDealer:
+    cars: List[Car]
+
+
+car3 = Car('Model S', 'Tesla', 89_000)
+car4 = Car('Model Y', 'Tesla', 54_000)
+car_dealer = CarDealer(cars=[car3, car4])
+
+print(car_dealer)
+
+[out]
+CarDealer(cars=[Car(name='Model S', brand='Tesla', price=89000), Car(name='Model Y', brand='Tesla', price=54000)])
+~~~
+
+- dataclass dict
+  
+~~~python
+[in]
+from dataclasses import dataclass, field
+
+@dataclass
+class Car:
+    name: str 
+    brand: str
+    price: int
+
+@dataclass
+class CarDealer:
+    date : str
+    name : str
+    car: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        self.car['car'] = Car(self.name, 'tesla', '120000')
+
+car = CarDealer(date='20100101', name='tesla')
+print(car)
+
+[out]
+CarDealer(date='20100101', name='tesla', car={'car': Car(name='tesla', brand='tesla', price='120000')})
+~~~
+
+- dataclass to dict or tupele
+  
+~~~python
+[in]
+from dataclasses import dataclass, field, asdict, astuple
+
+from typing import List
+
+@dataclass
+class User:
+    number: int
+    name: str = 'Anonymous'
+    test: List[int] = field(default_factory=list)
+
+user = User(number=122, name='Kim')
+
+print(asdict(user))
+print(astuple(user))
+
+
+[out]
+{'number': 122, 'name': 'Kim', 'test': []}
+(122, 'Kim', [])
+~~~
 <br><br><br>
 
 ## **sqlite**
 ---
 ### **create DB file & table**
 ---
+- variable type : text, integer, real, date, number(size), varchar2(size), char(size) 등 
 ~~~python
 fileName = 'test.db'
 fileDir = Path.home().joinpath('Desktop', fileName)
@@ -628,7 +1572,17 @@ conn.commit()
 
 conn.close()
 ~~~
+- [참고] 테이블 삭제 방법
+~~~python
+fileName = 'test.db'
+fileDir = Path.home().joinpath('Desktop', fileName)
+conn = sqlite3.connect(fileDir)
+cur = conn.cursor()
+cur.execute('drop table test_table)')
+conn.commit()
 
+conn.close()
+~~~
 ### **insert values**
 ---
 ~~~python
@@ -854,6 +1808,26 @@ print(lst)
 conn.close()
 ~~~
 
+### **Regex**
+---
+- python의 sqlite3 library에는 정규표현식을 사용할 수 있는 함수가 내장되어 있지 않아서 직접 함수를 설정해주아야함
+
+~~~python
+def regexp(expr, item):         # 별도 함수를 만들어줌
+    reg = re.compile(expr)
+    return reg.search(item) is not None
+
+time_str = '(20220204-002000)'
+fileName = f'naverLand{time_str}'
+fileDir = Path.cwd() / 'naverLand' / 'db' / f'{fileName}.db'
+conn = sqlite3.connect(fileDir)
+conn.create_function("REGEXP", 2, regexp)  # 사용자 함수를 등록함
+conn.row_factory = sqlite3.Row
+cur = conn.cursor()
+
+sql = f'''select idNo from article_info where idNo REGEXP '^[201]' '''
+~~~
+
 ### **Group By**
 ---
 - avg(*) + group by
@@ -1075,191 +2049,6 @@ with conn:
             f.write("%s\n" % line)
         print("Dump Print Complet")
 conn.close()
-~~~
-<br><br><br>
-
-
-## **Numpy**
----
-### **random**
----
-- np.random.rand() : [0.0, 1.0] 임의값 반환하며 shape으로 입력 시 array 반환(미입력 시 scalar)
-
-~~~python
-[in]
-np.random.rand(2, 3)
-
-[out]
-array([[0.41140371, 0.98738577, 0.42903107],
-       [0.93806615, 0.45240497, 0.12544594]])
-~~~
-
-- np.random.random() : [0.0, 1.0) 임의값 반환하며, shape를 튜플로 입력해야함(미입력 시 scalar)
-~~~python
-[in]
-np.random.random((2,3))
-
-[out]
-array([[0.41140371, 0.98738577, 0.42903107],
-       [0.93806615, 0.45240497, 0.12544594]])
-~~~
-
-- np.random.randn() : 평균이 0이고 표준편차가 1인 정규분포의 임의값 반환 (가우시안 분포), shape으로 입력 시 array 반환(미입력 시 scalar)
-~~~python
-[in]
-np.random.randn(2,3)
-
-[out]
-array([[ 0.40054939,  0.30965968, -0.50036237],
-       [ 0.64300747,  1.56065243, -0.33234598]])
-~~~
-
-- np.random.randint() : 입력값들 사이의 정수를 반환함 (균등 분포), 인자는 다음과 같음 -> low : int, high:int (optional), size : int or tuple 
-~~~python
-[in]
-np.random.randint(-100, 100, size=(2,3))
-
-[out]
-array([[-62,  10,  -8],
-       [ 70,  36, -68]])
-~~~
-<br><br><br>
-
-## **Time**
----
-### **time**
----
-- 실행 속도 계산
-~~~python
-[in]
-start = time.time()
-time.sleep(5)
-end = time.time()
-
-print(f'duration : {end - start} seconds')
-
-[out]
-duration : 5.004604816436768 seconds
-~~~
-- random sleep
-~~~python
-class RandomSleep:
-
-    def sleep(self):
-        range_option = {'quicker': [0, .5], 'slower': [.5, 2], 'stop': [10, 15]}
-        sleepLevel = random.choices(['quicker', 'slower', 'stop'], weights=[.6, .39, .01])
-        range = range_option.get(sleepLevel[0])
-        if sleepLevel[0] == 'stop' : print('Now taking a rest in a seconds')
-        time.sleep(random.uniform(range[0], range[1]))
-~~~
-
-### **datetime**
----
-
-- 현재 일자 및 시각 생성
-~~~python
-[in]
-datetime.now()
-
-[out]
-datetime.datetime(2021, 10, 15, 17, 27, 57, 116839)
-~~~
-
-- 특정 일자 생성
-~~~python
-[in]
-datetime.datetime(1923, 8, 29)
-
-[out]
-datetime.datetime(1923, 8, 29, 0, 0)
-~~~
-
-- datetime object를 str로 변환
-~~~python
-[in]
-date = datetime.datetime(1923, 8, 29)
-date.strftime(format='%Y-%m-%d')
-
-[out]
-'1923-08-29'
-~~~
-
-
-- str을 datetime object로 변환  
-! 주의 : 인자를 format='%Y-%m-%d'이라고 쓰면 안됨
-~~~python
-[in]
-date = '1923-8-29'
-datetime.datetime.strptime(date, '%Y-%m-%d')
-
-[out]
-datetime.datetime(1923, 8, 29, 0, 0)
-~~~
-
-- 기간 리스트 만들기
-~~~python
-[in]
-start = datetime.datetime.strptime("1923-08-29", "%Y-%m-%d")
-end = datetime.datetime.strptime("1923-09-03", "%Y-%m-%d")
-date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)]
-
-dayList = []
-for date in date_generated:
-    dayList.append(date.strftime("%Y%m%d"))
-
-dayList
-
-[out]
-['19230829', '19230830', '19230831', '19230901', '19230902']
-~~~
-
-- datetime에 3개월 더하는 방법 (timedelta는 시간, 일, 주 단위 연산만 가능)
-~~~python
-[in]
-from dateutil.relativedelta import relativedelta
-
-date = datetime.datetime(1923, 8, 29)
-date + relativedelta(months=3)
-
-[out]
-datetime.datetime(1923, 11, 29, 0, 0)
-~~~
-
-
-### **Pandas에서 시간 다루기**
----
-- 특정열을 datetime 포맷으로 변경
-
-~~~python
-[in]
-date = ['1923-08-29','1923-08-30','1923-09-01','1923-09-02']
-df = pd.DataFrame(date, columns=['date'])
-pd.to_datetime(df['date'], format='%Y-%m-%d')
-
-[out]
-0   1923-08-29
-1   1923-08-30
-2   1923-09-01
-3   1923-09-02
-Name: date, dtype: datetime64[ns]
-~~~
-
-
-- 분기 str format을 period[M] format으로 변환 (datetime은 분기 연산은 다루지 않음)
-~~~python
-[in]
-quater = ['1923-1','1923-2','1923-3','1923-4']
-df = pd.DataFrame(quater, columns=['quater'])
-
-df['quater'].apply(lambda x:pd.Period(x[:-1] + "Q" + x[-1:], freq="M"))
-
-[out]
-# 월로 변환되었음(1923-3 -> 1923-07)
-0    1923-01 
-1    1923-04
-2    1923-07
-3    1923-10
-Name: quater, dtype: period[M]
 ~~~
 <br><br><br>
 
