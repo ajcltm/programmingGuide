@@ -1113,6 +1113,12 @@ df
 1      2    bbb
 2      3    6.0
 ~~~
+- nan 값을 None 값으로 변환   
+ ! Pandas DataFrame에 None 데이터를 넣으면 NaN 객체로 자동 변환이 된다. None은 다른 프로그래밍 언어에서의 NULL이다. NaN은 Not a Number의 약자로 정의되거나, 표현되지 않는 부동소수점 값으로 Python에서는 float 타입이 된다.  math 모듈에서는 isnan(), pandas 모듈에서는 isnull() 함수로 nan인지 확인하는 함수를 제공한다.
+~~~python
+df = df.where(pd.notnull(df), None)
+~~~
+
 
 ~~~python
 [in]
@@ -1557,6 +1563,48 @@ print(astuple(user))
 ~~~
 <br><br><br>
 
+## **Pydantic**
+---
+### **overview**
+---
+~~~Python
+from datetime import datetime
+from typing import List, Optional
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    id: int
+    name = 'John Doe'
+    signup_ts: Optional[datetime] = None
+    friends: List[int] = []
+
+
+external_data = {
+    'id': '123',
+    'signup_ts': '2019-06-01 12:22',
+    'friends': [1, 2, '3'],
+}
+user = User(**external_data)
+print(user.id)
+#> 123
+print(repr(user.signup_ts))
+#> datetime.datetime(2019, 6, 1, 12, 22)
+print(user.friends)
+#> [1, 2, 3]
+print(user.dict())
+"""
+{
+    'id': 123,
+    'signup_ts': datetime.datetime(2019, 6, 1, 12, 22),
+    'friends': [1, 2, 3],
+    'name': 'John Doe',
+}
+"""
+~~~
+
+<br><br><br>
+
 ## **sqlite**
 ---
 ### **create DB file & table**
@@ -1648,7 +1696,7 @@ print(df)
 
 ### **Where Clause**
 ---
-- where clause
+- where clause : in (?, ?, ?)
 ~~~python
 fileName = 'naverLand(20220122-181419)'
 fileDir = Path.cwd() / 'naverLand' / 'db' / f'{fileName}.db'
@@ -1657,6 +1705,20 @@ cur = conn.cursor()
 sql = f'select * from article_info where articleNo in (?, ?)'
 args = ['2201917900', '2201919206']
 cur.execute(sql, args)
+
+for row in cur.fetchall():
+     print(row)
+conn.close() 
+~~~
+
+- where clause : date
+~~~python
+fileName = 'naverLand(20220122-181419)'
+fileDir = Path.cwd() / 'naverLand' / 'db' / f'{fileName}.db'
+conn = sqlite3.connect(fileDir)
+cur = conn.cursor()
+sql = f"select * from article_info where aptUseApproveYmd > date('2020-01-01')"
+cur.execute(sql)
 
 for row in cur.fetchall():
      print(row)
@@ -2156,6 +2218,18 @@ with open(path/'download_file.hwp', 'wb') as f:
     f.write(r.content)
 ~~~
 
+- content (zip 파일 다운로드)
+  ! zip 파일을 다운로드하여 압출을 풀어놓음(extractall) (아래 예제는 zip파일 안에 파일이 하나인 경우임) 
+~~~python
+from pathlib import Path
+from zipfile import ZipFile
+from io import BytesIO
+
+dir = Path.cwd()
+z = ZipFile(BytesIO(r.content))
+z.extractall(dir)
+~~~
+
 ### **BeautifulSoup**
 ---
 - select()
@@ -2194,7 +2268,58 @@ pd.read_html(str(table))[0]
 ~~~
 <br><br><br>
 
+### **XML 파일 다루기**
+---
+- xml 파일 프린트하기
+~~~python
+[in]
+dir = Path.cwd()
 
+with open(dir/'CORPCODE.xml','r',  encoding='UTF8') as f:
+    xmlString = f.read()
+print(xmlString)
+
+[out]
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+    <list>
+        <corp_code>00434003</corp_code>
+        <corp_name>다코</corp_name>
+        <stock_code> </stock_code>
+        <modify_date>20170630</modify_date>
+    </list>
+    <list>
+        <corp_code>00434456</corp_code>
+        <corp_name>일산약품</corp_name>
+        <stock_code> </stock_code>
+        <modify_date>20170630</modify_date>
+    </list>
+~~~
+
+- xml 파일을 python dictionary로 변환
+~~~python
+from xml.etree.ElementTree import parse
+
+dir = Path.cwd()
+
+tree = parse(dir/'CORPCODE.xml')
+root = tree.getroot()
+
+list = root.findall("list")
+
+dic = [{'corp_code' : x.findtext("corp_code"), 'corp_name' : x.findtext("corp_name"), 'stock_code' : x.findtext("stock_code"), 'modify_date' : x.findtext("modify_date")} for x in list]
+~~~
+
+## **TQDM**
+---
+- progress bar size
+~~~python
+lst = range(0,100000)
+
+num = 0
+for i in tqdm(lst, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
+    num = i
+~~~
 
 ## **System OS**
 ---
