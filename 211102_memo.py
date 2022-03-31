@@ -31,84 +31,90 @@ from datetime import datetime
 
 
 
-dic = {}
-for i in range(0,4) :
-    dic[f'key_{i}'] = i
-print(dic)
+# dic = {}
+# for i in range(0,4) :
+#     dic[f'key_{i}'] = i
+# print(dic)
 
 
-withdrawal = {}
+# withdrawal = {}
 
-symbols = ['AAPL', 'NVDA', 'AMZN']
-for symbol in symbols:
-    withdrawal[symbol] = {'unitPrice': 0, 'amounts': 0}
-print(withdrawal)
-
-
-a = {1: 'a', 'name':'pey', 3:[1,2,3]}
-
-del a[1]
-
-print(a)
+# symbols = ['AAPL', 'NVDA', 'AMZN']
+# for symbol in symbols:
+#     withdrawal[symbol] = {'unitPrice': 0, 'amounts': 0}
+# print(withdrawal)
 
 
-a = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
-a.clear()
-print(a)
+# a = {1: 'a', 'name':'pey', 3:[1,2,3]}
+
+# del a[1]
+
+# print(a)
 
 
-a = {'name':'pey', 'phone':'0119993323', 'birth': '1118'}
-print(a.get('name'))
-print(a.get('nokey'))
-
-print('name' in a)
-print('email' in a)
+# a = {'name': 'pey', 'phone': '0119993323', 'birth': '1118'}
+# a.clear()
+# print(a)
 
 
-dic1 = {1:10, 2:20}
+# a = {'name':'pey', 'phone':'0119993323', 'birth': '1118'}
+# print(a.get('name'))
+# print(a.get('nokey'))
 
-dic2 = {1:100, 3:300}
-
-dic1.update(dic2)
-
-print(dic1)
-
-
-import random 
-lst = [1, 2, 3]
-choiceLst = random.choice(lst)
-print(choiceLst)
-
-lst = [1, 2, 3]
-sampleLst = random.sample(lst, 2)
-print(sampleLst)
+# print('name' in a)
+# print('email' in a)
 
 
-li = [1, 2, 3]
-choiceLst = [random.choice(li) for i in range(5)]
-print(choiceLst)
+# dic1 = {1:10, 2:20}
 
-df8 = pd.DataFrame({'col_1': ['1', '2', '3'], 
-                   'col_2': ['4', 'bbb', '6']})
-df8 = df8.apply(pd.to_numeric, errors = 'coerce')
-print(df8)
+# dic2 = {1:100, 3:300}
 
-from dataclasses import dataclass, field
+# dic1.update(dic2)
 
-@dataclass
-class Car:
-    name: str 
-    brand: str
-    price: int
+# print(dic1)
 
-@dataclass
-class CarDealer:
-    date : str
-    name : str
-    car: dict = field(default_factory=dict)
 
-    def __post_init__(self):
-        self.car['car'] = Car(self.name, 'tesla', '120000')
+# import random 
+# lst = [1, 2, 3]
+# choiceLst = random.choice(lst)
+# print(choiceLst)
 
-car = CarDealer(date='20100101', name='tesla')
-print(car)
+# lst = [1, 2, 3]
+# sampleLst = random.sample(lst, 2)
+# print(sampleLst)
+
+
+# li = [1, 2, 3]
+# choiceLst = [random.choice(li) for i in range(5)]
+# print(choiceLst)
+
+# df8 = pd.DataFrame({'col_1': ['1', '2', '3'], 
+#                    'col_2': ['4', 'bbb', '6']})
+# df8 = df8.apply(pd.to_numeric, errors = 'coerce')
+# print(df8)
+
+# from dataclasses import dataclass, field
+
+# @dataclass
+# class Car:
+#     name: str 
+#     brand: str
+#     price: int
+
+# @dataclass
+# class CarDealer:
+#     date : str
+#     name : str
+#     car: dict = field(default_factory=dict)
+
+#     def __post_init__(self):
+#         self.car['car'] = Car(self.name, 'tesla', '120000')
+
+# car = CarDealer(date='20100101', name='tesla')
+# print(car)
+
+df = pd.DataFrame({'col1':[1,5,7,6,3], 'col2':[1,2,3,6,9]})
+print(df)
+
+
+print(df.to_dict(orient="records"))

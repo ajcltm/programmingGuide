@@ -1101,6 +1101,79 @@ df.loc[2:3]
 3	6      	6
 ~~~
 
+### **타입 변경**
+---
+- to dictionary
+~~~python
+[in]
+df = pd.DataFrame({'col1':[1,5,7,6,3], 'col2':[1,2,3,6,9]})
+print(df)
+
+[out]
+   col1  col2
+0     1     1
+1     5     2
+2     7     3
+3     6     6
+4     3     9
+~~~
+~~~python
+[in]
+df.to_dict()
+
+[out]
+{'col1': {0: 1, 1: 5, 2: 7, 3: 6, 4: 3}, 'col2': {0: 1, 1: 2, 2: 3, 3: 6, 4: 9}}
+~~~
+~~~python
+[in]
+df.to_dict(orient="list")
+
+[out]
+{'col1': [1, 5, 7, 6, 3], 'col2': [1, 2, 3, 6, 9]}
+~~~
+
+~~~python
+[in]
+df.to_dict(orient='series')
+
+[out]
+{'col1': 0    1
+1    5
+2    7
+3    6
+4    3
+Name: col1, dtype: int64, 'col2': 0    1
+1    2
+2    3
+3    6
+4    9
+Name: col2, dtype: int64}
+~~~
+
+~~~python
+[in]
+df.to_dict(orient="split")
+
+[out]
+{'index': [0, 1, 2, 3, 4], 'columns': ['col1', 'col2'], 'data': [[1, 1], [5, 2], [7, 3], [6, 6], [3, 9]]}
+~~~
+
+~~~python
+[in]
+df.to_dict(orient="index")
+
+[out]
+{0: {'col1': 1, 'col2': 1}, 1: {'col1': 5, 'col2': 2}, 2: {'col1': 7, 'col2': 3}, 3: {'col1': 6, 'col2': 6}, 4: {'col1': 3, 'col2': 9}}
+~~~
+
+~~~python
+[in]
+df.to_dict(orient="records")
+
+[out]
+[{'col1': 1, 'col2': 1}, {'col1': 5, 'col2': 2}, {'col1': 7, 'col2': 3}, {'col1': 6, 'col2': 6}, {'col1': 3, 'col2': 9}]
+~~~
+
 ### **Data 전처리**
 ---
 - to_numeric()  
