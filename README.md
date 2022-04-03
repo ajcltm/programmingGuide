@@ -1231,8 +1231,23 @@ result = reduce(lambda acc, cur: acc if cur in acc else acc+[cur], array, [])
 ['F', 'D', 'A', 'C', 'B', 'E']
 ~~~
 
+### **Ruduce**
+---
+- partial
+~~~python
+def power(base, exponent):
+    return base ** exponent
 
+[in]
+from functools import partial
 
+square = partial(power, exponent=2)
+cube = partial(power, exponent=3)
+
+def test_partials():
+    assert square(2) == 4
+    assert cube(2) == 8
+~~~
 
 ## **Time**
 ---
@@ -1680,7 +1695,7 @@ df.sort_values(by="B")
 2013-01-05 -0.424972  0.567020  0.276232 -1.087401
 ~~~
 
-### **Data 조회**
+### **Data Selection**
 ---
 - Getting
 ~~~python
@@ -2102,9 +2117,329 @@ df.to_dict(orient="records")
 [{'col1': 1, 'col2': 1}, {'col1': 5, 'col2': 2}, {'col1': 7, 'col2': 3}, {'col1': 6, 'col2': 6}, {'col1': 3, 'col2': 9}]
 ~~~
 
-### **Data 전처리**
+### **column, row, index 변경, 추가, 삭제**
 ---
-- Missing data
+- df.set_index()
+~~~python
+# df
+   A  B  C
+0  1  2  3
+1  4  5  6
+2  7  8  9
+---------------------------------
+[in]
+df = df.set_index('A')
+print(df)
+
+[out]
+   B  C
+A      
+1  2  3
+4  5  6
+7  8  9
+~~~
+- df.columns or df.rename
+~~~python
+
+[in]
+# 전체 열 이름 입력하기
+df.columns = ['name1', 'name2', 'name3']
+
+# 선택하여 열 이름 변경하기
+df.rename(columns={'Beforename':'Aftername'}, inplace=True)
+~~~
+- df.append()
+~~~python
+# df
+    48  49  50
+0   1   2   3
+1   4   5   6
+2   7   8   9
+
+# a 
+   48  49  50
+0   1   2   3
+---------------------------
+[in]
+df = df.append(a)
+df = df.reset_index(drop=True)
+
+[out]
+   48  49  50
+0   1   2   3
+1   4   5   6
+2   7   8   9
+3   1   2   3
+~~~
+- df.drop()
+~~~python
+# df
+   A  B  C
+0  1  2  3
+1  4  5  6
+2  7  8  9
+
+[in]
+df.drop('A', axis=1, inplace=True)
+print(df)
+
+[out]
+   B  C
+0  2  3
+1  5  6
+2  8  9
+---------------------------
+[in]
+print(df.drop(df.index[1]))
+
+[out]
+   A  B  C
+0  1  2  3
+2  7  8  9
+---------------------------
+[in]
+print(df.drop(0))
+
+[out]
+   A  B  C
+1  4  5  6
+2  7  8  9
+~~~
+
+### **데이터 수정하기**
+---
+- selecting 후 수정
+~~~python
+# df
+   col1  col2 col3
+0     1     1    a
+1     1     1    a
+2     2     2    b
+3     2     4    c
+4     3     7    d
+-------------------------
+# df가 원본이면 아래와 같이 작동함
+[in]
+df.loc[0, 'col1'] = 100
+
+[out]
+   col1  col2 col3
+0   100     1    a
+1     1     1    a
+2     2     2    b
+3     2     4    c
+4     3     7    d
+-------------------------
+# df를 selectig하면 얕은 복사가된 사본이 되어 원본데이터는 바뀌어 있지 않음
+[in]
+con = df.loc[:, 'col1']==1
+df.loc[con][0] = 100
+
+print(df)
+
+[out]
+   col1  col2 col3
+0     1     1    a
+1     1     1    a
+2     2     2    b
+3     2     4    c
+4     3     7    d
+-------------------------
+# df를 index로 직접 selectig하면 원본데이터가 변경됨
+[in]
+con = df.loc[:, 'col1']==1
+df.loc[df.loc[con].index, 'col1'] = 100
+
+print(df)
+
+[out]
+   col1  col2 col3
+0   100     1    a
+1   100     1    a
+2     2     2    b
+3     2     4    c
+4     3     7    d
+~~~
+- df.replace or series.replace로 데이터 수정
+~~~python
+# df
+   A  B  C
+0  0  5  a
+1  1  6  b
+2  2  7  c
+3  3  8  d
+4  4  9  e
+
+[in]
+df.replace(0, 5)
+
+[out]
+    A  B  C
+0  5  5  a
+1  1  6  b
+2  2  7  c
+3  3  8  d
+4  4  9  e
+--------------------------
+# List-like `to_replace`
+[in]
+df.replace([0, 1, 2, 3], 4)
+
+[out]
+    A  B  C
+0  4  5  a
+1  4  6  b
+2  4  7  c
+3  4  8  d
+4  4  9  e
+--------------------------
+# List-like `to_replace`
+[in]
+df.replace([0, 1, 2, 3], [4, 3, 2, 1])
+
+[out]
+    A  B  C
+0  4  5  a
+1  3  6  b
+2  2  7  c
+3  1  8  d
+4  4  9  e
+--------------------------
+# dict-like `to_replace`
+[in]
+df.replace({0: 10, 1: 100})
+
+[out]
+    A  B  C
+0   10  5  a
+1  100  6  b
+2    2  7  c
+3    3  8  d
+4    4  9  e
+--------------------------
+# dict-like `to_replace`
+[in]
+df.replace({'A': 0, 'B': 5}, 100)
+
+[out]
+    A    B  C
+0  100  100  a
+1    1    6  b
+2    2    7  c
+3    3    8  d
+4    4    9  e
+--------------------------
+# dict-like `to_replace`
+[in]
+df.replace({'A': {0: 100, 4: 400}})
+
+[out]
+    A  B  C
+0  100  5  a
+1    1  6  b
+2    2  7  c
+3    3  8  d
+4  400  9  e
+~~~
+~~~python
+# df
+      A    B
+0   bat  abc
+1   foo  bar
+2  bait  xyz
+--------------------------
+# Regular expression `to_replace`
+[in]
+df.replace(to_replace=r'^ba.$', value='new', regex=True)
+
+[out]
+        A    B
+0   new  abc
+1   foo  new
+2  bait  xyz
+--------------------------
+[in]
+df.replace({'A': r'^ba.$'}, {'A': 'new'}, regex=True)
+
+[out]
+        A    B
+0   new  abc
+1   foo  bar
+2  bait  xyz
+~~~
+
+- where 또는 mask함수로 수정
+~~~python
+s = pd.Series(range(5))
+--------------------------
+[in]
+s.where(s > 0)
+
+[out]
+0    NaN
+1    1.0
+2    2.0
+3    3.0
+4    4.0
+dtype: float64
+--------------------------
+[in]
+s.mask(s > 0)
+
+[out]
+0    0.0
+1    NaN
+2    NaN
+3    NaN
+4    NaN
+dtype: float64
+--------------------------
+[in]
+s.where(s > 1, 10)
+
+[out]
+0    10
+1    10
+2    2
+3    3
+4    4
+dtype: int64
+--------------------------
+[in]
+s.mask(s > 1, 10)
+
+[out]
+0     0
+1     1
+2    10
+3    10
+4    10
+dtype: int64
+~~~
+
+~~~python
+   A  B
+0  0  1
+1  2  3
+2  4  5
+3  6  7
+4  8  9
+--------------------------
+[in]
+m = df % 3 == 0
+df.where(m, -df)
+
+[out]
+   A  B
+0  0 -1
+1 -2  3
+2 -4 -5
+3  6 -7
+4 -8  9
+~~~
+
+### **Missing data 처리**
+---
 ~~~python
 # df
                    A         B         C         D
@@ -2159,7 +2494,8 @@ pd.isna(df1)
 2013-01-04  False  False  False  False  False   True
 ~~~
 
-
+### **중복값 또는 고유값 처리**
+---
 - series.unique()
 ~~~python
 # df
@@ -2278,6 +2614,9 @@ print(df.drop_duplicates(['col1'], keep='last'))
 4     3     7    d
 ~~~
 
+
+### **데이터 타입 변경** 
+---
 - to_numeric()  
  : DataFrame 이나 Series 내 문자열 칼럼을 숫자형으로 변환  
  ! 수치형으로 변환이 불가능한 값이 있을 경우, 인자 옵션은 errors = 'raise'(에러메시지 띄움), 'coerce'(nan 반환), 'ignore'(무시하고 원래값 반환)
@@ -3169,7 +3508,6 @@ B
 A  2.241830 -1.028115 -2.363137       NaN       NaN  2.001971
 B -0.676843  0.005518       NaN  0.867024  0.316495       NaN
 C -1.077692  1.399070  1.177566       NaN       NaN  0.352360
-~~~
 ----------------------------------------------
 [in]
 pd.pivot_table(
