@@ -1178,6 +1178,69 @@ False
 
 <br><br><br>
 
+## **&#42;args & 	&#42;&#42;kwargs**
+---
+- &#42;args
+~~~python
+[in]
+def test_var_args(f_arg, *argv):
+    print ("첫 번째 인자:", f_arg)
+    for arg in argv:
+        print ("*argv의 다른 인자", arg)
+
+tast_var_args('야숩', 'python', '달걀', 'test')
+
+[out]
+첫번째 인자: 야숩
+*argv의 다른 인자: python
+*argv의 다른 인자: 달걀
+*argv의 다른 인자: test
+~~~
+
+- &#42;&#42;kwargs
+~~~python
+[in]
+def greet_me(**kwargs):
+  if kwargs is not None:
+    for key, value in kwargs.items(): 
+      print("%s == %s" % (key, value)) 
+
+greet_me(name="yasoob")
+
+
+[out]
+name == yasoob
+~~~
+
+## **Built-in Fuctions**
+---
+
+- zip
+~~~python
+[in]
+numbers = [1, 2, 3]
+letters = ["A", "B", "C"]
+for pair in zip(numbers, letters):
+    print(pair)
+
+[out]
+(1, 'A')
+(2, 'B')
+(3, 'C')
+~~~
+
+- map 
+~~~python
+# map(변환 함수, 순회 가능한 데이터)
+[in]
+a = [1.2, 2.5, 3.7, 4.6]
+a = list(map(int, a))
+print(a)
+
+[out]
+[1, 2, 3, 4]
+~~~
+
 ## **Functool**
 ---
 ### **Ruduce**
@@ -1231,7 +1294,7 @@ result = reduce(lambda acc, cur: acc if cur in acc else acc+[cur], array, [])
 ['F', 'D', 'A', 'C', 'B', 'E']
 ~~~
 
-### **Ruduce**
+### **Partial**
 ---
 - partial
 ~~~python
@@ -1253,6 +1316,29 @@ def test_partials():
 ---
 ### **time**
 ---
+- localtime
+~~~python
+[in]
+from time import localtime
+
+tm = localtime(1649637016.7605205)
+
+print("year:", tm.tm_year)
+print("month:", tm.tm_mon)
+print("day:", tm.tm_mday)
+print("hour:", tm.tm_hour)
+print("minute:", tm.tm_min)
+print("second:", tm.tm_sec)
+
+[out]
+year: 2019
+month: 11
+day: 30
+hour: 14
+minute: 35
+second: 26
+~~~
+
 - 실행 속도 계산
 ~~~python
 [in]
@@ -1277,6 +1363,87 @@ class RandomSleep:
         time.sleep(random.uniform(range[0], range[1]))
 ~~~
 
+### **schedule**
+---
+~~~python
+import schedule
+import time
+
+def job():
+    print("If you can, do it. if you can't, teach it.")
+
+schedule.every(3).seconds.do(job) # 3초마다 job 실행
+schedule.every(3).minutes.do(job) # 3분마다 job 실행
+schedule.every(3).hours.do(job) # 3시간마다 job 실행
+schedule.every(3).days.do(job)  # 3일마다 job 실행
+schedule.every(3).weeks.do(job) # 3주마다 job 실행
+
+schedule.every().minute.at(":23").do(job) # 매분 23초에 job 실행
+schedule.every().hour.at(":42").do(job) # 매시간 42분에 작업 실행
+
+# 5시간 20분 30초마다 작업 실행
+schedule.every(5).hours.at("20:30").do(job)
+
+# 매일 특정 HH:MM 및 다음 HH:MM:SS에 작업 실행
+schedule.every().day.at("10:30").do(job)
+schedule.every().day.at("10:30:42").do(job)
+
+# 주중 특정일에 작업 실행
+schedule.every().monday.do(job)
+schedule.every().wednesday.at("13:15").do(job)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+~~~
+~~~python
+import schedule
+import time
+
+def work():
+    print("If you can, do it. if you can't, teach it.")
+
+def start_work():
+    schedule.every(5).seconds.do(work)
+
+# 매일 9시에 5초 마다 실행
+schedule.every().days.at("09:00").do(start_work)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+~~~
+
+### **threding**
+---
+
+~~~python
+[in]
+import time
+import threading
+
+def printing():
+    print('now threading!')
+    threading.Timer(2, printing).start()
+
+printing()
+
+while True:
+    time.sleep(1)
+    print('another threding...')
+
+[out]
+now threading!
+another threding...
+now threading!
+another threding...
+another threding...
+now threading!
+another threding...
+another threding...
+~~~
+
+
 ### **datetime**
 ---
 
@@ -1297,6 +1464,33 @@ datetime.datetime(1923, 8, 29)
 [out]
 datetime.datetime(1923, 8, 29, 0, 0)
 ~~~
+
+- 시간 표기법
+
+|코드| 설명| 출력
+|---|---|---
+|%a|요일 줄임말|Sun, Mon, ... Sat
+%A | 요일 | Sunday, Monday, ..., Saturday
+%w | 요일을 숫자로 표시, 월요일~일요일, 0~6 | 0, 1, ..., 6
+%d | 일 | 01, 02, ..., 31
+%b | 월 줄임말 | Jan, Feb, ..., Dec
+%B | 월 | January, February, …, December
+%m | 숫자 월 | 01, 02, ..., 12
+%y | 두 자릿수 연도 | 01, 02, ..., 99
+%Y | 네 자릿수 연도 | 0001, 0002, ..., 2017, 2018, 9999
+%H | 시간(24시간) | 00, 01, ..., 23
+%I | 시간(12시간) | 01, 02, ..., 12
+%p | AM, PM | AM, PM
+%M | 분 | 00, 01, ..., 59
+%S | 초 | 00, 01, ..., 59
+%Z | 시간대 | 대한민국 표준시
+%j | 1월 1일부터 경과한 일수 | 001, 002, ..., 366
+%U | 1년중 주차, 월요일이 한 주의 시작으로 | 00, 01, ..., 53
+%W | 1년중 주차, 월요일이 한 주의 시작으로 | 00, 01, ..., 53
+%c | 날짜, 요일, 시간을 출력, 현재 시간대 기준 | Sat May 19 11:14:27 2018
+%x | 날짜를 출력, 현재 시간대 기준 | 05/19/18
+%X | 시간을 출력, 현재 시간대 기준 | '11:44:22'
+
 
 - datetime object를 str로 변환
 ~~~python
@@ -3795,6 +3989,183 @@ print(user.dict())
 
 <br><br><br>
 
+
+## **openpyxl**
+---
+### **create a workbook**
+---
+~~~python
+from openpyxl import Workbook
+wb = Workbook()
+ws = wb.active
+# This is set to 0 by default. Unless you modify its value, you will always get the first worksheet by using this method.
+~~~
+~~~python
+wb = Workbook()
+ws1 = wb.create_sheet("Mysheet") # insert at the end (default)
+ws2 = wb.create_sheet("Mysheet", 0) # insert at first position
+ws3 = wb.create_sheet("Mysheet", -1) # insert at the penultimate position
+~~~
+~~~python
+ws.title = "New Title"
+ws.sheet_properties.tabColor = "1072BA" # RRGGBB color code for the background color of the tab holding this title
+~~~
+~~~python
+# Once you gave a worksheet a name, you can get it as a key of the workbook
+ws3 = wb["New Title"]
+# You can review the names of all worksheets of the workbook with the Workbook.sheetname attribute
+print(wb.sheetnames)
+# >>> ['Sheet2', 'New Title', 'Sheet1']
+~~~
+### **Playing with data**
+~~~python
+# Now we know how to get a worksheet, we can start modifying cells content. Cells can be accessed directly as keys of the worksheet:
+c = ws['A4']
+# This will return the cell at A4, or create one if it does not exist yet. Values can be directly assigned:
+ws['A4'] = 4
+# There is also the Worksheet.cell() method. This provides access to cells using row and column notation:
+d = ws.cell(row=4, column=2, value=10)
+~~~
+~~~python
+# Ranges of cells can be accessed using slicing:
+cell_range = ws['A1':'C2']
+# Ranges of rows or columns can be obtained similarly:
+colC = ws['C']
+col_range = ws['C:D']
+row10 = ws[10]
+row_range = ws[5:10]
+~~~
+~~~python
+# You can also use the Worksheet.iter_rows() method:
+[in]
+for row in ws.iter_rows(min_row=1, max_col=3, max_row=2):
+  for cell in row:
+      print(cell)
+[out]
+<Cell Sheet1.A1>
+<Cell Sheet1.B1>
+<Cell Sheet1.C1>
+<Cell Sheet1.A2>
+<Cell Sheet1.B2>
+<Cell Sheet1.C2>
+~~~
+~~~python
+# Likewise the Worksheet.iter_cols() method will return columns:
+[in]
+for col in ws.iter_cols(min_row=1, max_col=3, max_row=2):
+  for cell in col:
+      print(cell)
+[out]
+<Cell Sheet1.A1>
+<Cell Sheet1.A2>
+<Cell Sheet1.B1>
+<Cell Sheet1.B2>
+<Cell Sheet1.C1>
+<Cell Sheet1.C2>
+~~~
+~~~python
+# If you need to iterate through all the rows or columns of a file, you can instead use the Worksheet.rows property:
+[in]
+ws = wb.active
+ws['C9'] = 'hello world'
+tuple(ws.rows)
+[out]
+((<Cell Sheet.A1>, <Cell Sheet.B1>, <Cell Sheet.C1>),
+(<Cell Sheet.A2>, <Cell Sheet.B2>, <Cell Sheet.C2>),
+(<Cell Sheet.A3>, <Cell Sheet.B3>, <Cell Sheet.C3>),
+(<Cell Sheet.A4>, <Cell Sheet.B4>, <Cell Sheet.C4>),
+(<Cell Sheet.A5>, <Cell Sheet.B5>, <Cell Sheet.C5>),
+(<Cell Sheet.A6>, <Cell Sheet.B6>, <Cell Sheet.C6>),
+(<Cell Sheet.A7>, <Cell Sheet.B7>, <Cell Sheet.C7>),
+(<Cell Sheet.A8>, <Cell Sheet.B8>, <Cell Sheet.C8>),
+(<Cell Sheet.A9>, <Cell Sheet.B9>, <Cell Sheet.C9>))
+~~~
+~~~python
+# or the Worksheet.columns property:
+[in]
+tuple(ws.columns)
+[out]
+((<Cell Sheet.A1>,
+<Cell Sheet.A2>,
+<Cell Sheet.A3>,
+<Cell Sheet.A4>,
+<Cell Sheet.A5>,
+<Cell Sheet.A6>,
+...
+~~~
+~~~python
+# Both Worksheet.iter_rows() and Worksheet.iter_cols() can take the values_only parameter to return just the cell’s value:
+[in]
+for row in ws.iter_rows(min_row=1, max_col=3, max_row=2, values_only=True):
+  print(row)
+[out]
+(None, None, None)
+(None, None, None)
+~~~
+### **Data storage**
+~~~python
+# Once we have a Cell, we can assign it a value:
+[in]
+c = ws['A4']
+c.value = 'hello, world'
+print(c.value)
+
+[out]
+'hello, world'
+-------------------------------------------------
+[in]
+d = ws.cell(row=4, column=2, value=10)
+d.value = 3.14
+print(d.value)
+
+[out]
+3.14
+-------------------------------------------------
+#(note) Because of this feature, scrolling through cells instead of accessing them directly will create them all in memory, even if you don’t assign them a value
+for x in range(1,101):
+      for y in range(1,101):
+          ws.cell(row=x, column=y)
+#  -> This code dosen't create any cell value
+-------------------------------------------------
+# simple usage
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+
+wb = Workbook()
+dest_filename = 'empty_book.xlsx'
+ws1 = wb.active
+ws1.title = "range names"
+for row in range(1, 40):
+     ws1.append(range(600))
+ws2 = wb.create_sheet(title="Pi")
+ws2['F5'] = 3.14
+ws3 = wb.create_sheet(title="Data")
+for row in range(10, 20):
+    for col in range(27, 54):
+        _ = ws3.cell(column=col, row=row, value="{0}".format(get_column_letter(col)))
+wb.save(filename = dest_filename)
+~~~
+
+
+### **Saving to a file**
+~~~python
+# The simplest and safest way to save a workbook is by using the Workbook.save() method of the Workbook object:
+wb = Workbook()
+wb.save('balances.xlsx')
+~~~
+
+### **Loading from a file**
+---
+~~~python
+[in]
+from openpyxl import load_workbook
+wb2 = load_workbook('test.xlsx')
+print(wb2.sheetnames)
+
+[out]
+['Sheet2', 'New Title', 'Sheet1']
+~~~
+
 ## **sqlite**
 ---
 ### **create DB file & table**
@@ -4782,6 +5153,111 @@ num = 0
 for i in tqdm(lst, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
     num = i
 ~~~
+
+## **Blinker**
+---
+- Subscribing to Signals & Emitting Signals
+~~~python
+[in]
+from blinker import signal
+
+def subscriber(sender):
+    print("Got a signal sent by %r" % sender)
+
+class Processor:
+  def __init__(self, name):
+    self.name = name
+
+  def go(self):
+    ready = signal('ready')
+    ready.send(self)
+    print("Processing.")
+    complete = signal('complete')
+    complete.send(self)
+
+  def __repr__(self):
+    return '<Processor %s>' % self.name
+
+
+ready = signal('ready')
+ready.connect(subscriber)
+processor_a = Processor('a')
+processor_a.go()
+
+[out]
+Got a signal sent by <Processor a>
+Processing.
+~~~
+
+- Subscribing to Specific Senders
+~~~python
+[in]
+def b_subscriber(sender):
+  print("Caught signal from processor_b.")
+  assert sender.name == 'b'
+processor_b = Processor('b')
+ready.connect(b_subscriber, sender=processor_b)
+processor_a.go()
+processor_b.go()
+
+[out]
+Got a signal sent by <Processor b>
+Caught signal from processor_b.
+Processing.
+~~~
+- Sending and Receiving Data Through Signals
+~~~python
+[in]
+send_data = signal('send-data')
+@send_data.connect
+def receive_data(sender, **kw):
+  print("Caught signal from %r, data %r" % (sender, kw))
+  return 'received!'
+
+result = send_data.send('anonymous', abc=123)
+print(result)
+# The return value of send() collects the return values of each connected function as a list of (receiver function, return value) pairs:
+
+[out]
+Caught signal from 'anonymous', data {'abc': 123}
+[(<function receive_data at 0x...>, 'received!')]
+~~~
+
+- Practicle Example
+~~~python
+[in]
+from blinker import signal
+frobnicated = signal('frobnicated')
+
+class Receiver(object):
+
+  def __init__(self):
+    def handle_frobnicated(sender, **kwargs):
+      self.on_frobnicated(sender, **kwargs)
+    self.handle_frobnicated = handle_frobnicated
+    frobnicated.connect(handle_frobnicated)
+
+  def on_frobnicated(self, sender, **kwargs):
+    print sender, kwargs['message']
+
+if __name__ == '__main__':
+  receiver = Receiver()
+  for i in range(10):
+      frobnicated.send('Sender %s' % i, message='hello')
+
+[out]
+Sender 0 hello
+Sender 1 hello
+Sender 2 hello
+Sender 3 hello
+Sender 4 hello
+Sender 5 hello
+Sender 6 hello
+Sender 7 hello
+Sender 8 hello
+Sender 9 hello
+~~~
+
 
 ## **System OS**
 ---
