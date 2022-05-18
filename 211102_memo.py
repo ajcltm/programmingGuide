@@ -231,7 +231,7 @@ def work():
 def start_work():
     schedule.every(1).minutes.do(work)
 
-schedule.every().days.at("00:41").do(start_work)
+schedule.every().days.at("00:43").do(start_work)
 
 while True:
     schedule.run_pending()

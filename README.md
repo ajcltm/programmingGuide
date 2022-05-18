@@ -1178,6 +1178,27 @@ False
 
 <br><br><br>
 
+## **pickle**
+---
+- save pickle
+---
+~~~python
+import pickle
+my_list = ['a','b','c']
+
+with open("data.pickle","wb") as fw:
+    pickle.dump(my_list, fw)
+~~~
+- load pickle
+~~~python
+with open("data.pickle","rb") as fr:
+    data = pickle.load(fr)
+print(data)
+~~~
+<br><br><br>
+
+
+
 ## **&#42;args & 	&#42;&#42;kwargs**
 ---
 - &#42;args
@@ -1490,8 +1511,9 @@ datetime.datetime(1923, 8, 29, 0, 0)
 %c | 날짜, 요일, 시간을 출력, 현재 시간대 기준 | Sat May 19 11:14:27 2018
 %x | 날짜를 출력, 현재 시간대 기준 | 05/19/18
 %X | 시간을 출력, 현재 시간대 기준 | '11:44:22'
-
-
+---
+- strptime vs strftime  
+(!) strptime is short for "parse time" where strftime is for "formatting time"
 - datetime object를 str로 변환
 ~~~python
 [in]
@@ -1519,7 +1541,7 @@ datetime.datetime(1923, 8, 29, 0, 0)
 [in]
 start = datetime.datetime.strptime("1923-08-29", "%Y-%m-%d")
 end = datetime.datetime.strptime("1923-09-03", "%Y-%m-%d")
-date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)]
+date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)+1]
 
 dayList = []
 for date in date_generated:
@@ -3986,6 +4008,61 @@ print(user.dict())
 }
 """
 ~~~
+~~~python
+from pydantic import BaseModel, validator
+
+class krxData(BaseModel):
+    ISU_SRT_CD: str
+    ISU_ABBRV : str
+    MKT_NM : str
+    SECT_TP_NM : str
+    TDD_CLSPRC : int
+    FLUC_TP_CD : int
+    CMPPREVDD_PRC : int
+    FLUC_RT : float
+    TDD_OPNPRC : int
+    TDD_HGPRC : int
+    TDD_LWPRC : int
+    ACC_TRDVOL : int
+    ACC_TRDVAL : int
+    MKTCAP : int
+    LIST_SHRS : int
+    MKT_ID : str
+
+    @validator('*', pre=True)
+    def delet_comma(cls, v):
+        return v.replace(',', '')
+
+# he keyword argument pre will cause the validator to be called prior to other validation
+~~~
+~~~python
+from pydantic import BaseModel
+
+class BarModel(BaseModel):
+    whatever: int
+
+class FooBarModel(BaseModel):
+    banana: float
+    foo: str
+    bar: BarModel
+
+m = FooBarModel(banana=3.14, foo='hello', bar={'whatever': 123})
+
+# returns a dictionary:
+print(m.dict())
+"""
+{
+    'banana': 3.14,
+    'foo': 'hello',
+    'bar': {'whatever': 123},
+}
+"""
+print(m.dict(include={'foo', 'bar'}))
+#> {'foo': 'hello', 'bar': {'whatever': 123}}
+print(m.dict(exclude={'foo', 'bar'}))
+#> {'banana': 3.14}
+~~~
+
 
 <br><br><br>
 
@@ -4164,6 +4241,108 @@ print(wb2.sheetnames)
 
 [out]
 ['Sheet2', 'New Title', 'Sheet1']
+~~~
+
+## **pymysql**
+---
+### create schema
+---
+~~~python
+### MySQL Workbench query 창에서 입력 후 ctrl+enter 키실행
+CREATE SCHEMA krxData DEFAULT CHARACTER SET utf8;
+~~~
+
+### **create DB file & table**
+---
+- data type
+
+|데이터형식| 바이트 수|숫자 범위| 설명|
+|---|---|---|---|
+|BIT(N)|	N/8|	 	|1~64Bit 표현, b'0000'형식으로 표현
+|TINYINT|	1|	-128 ~ 127	|정수
+|SMALLINT|	2|	-32,768 ~ 32,767	|정수
+|MEDIUMINT|	3|	-8,388,608 ~ 8,388,607	|정수
+|INT, INTEGER|	4|	약-21억 ~ +21억	|정수
+|BIGINT|	8|	약 -900경 ~ +900경	|정수
+|FLOAT|	4|	-3.40E+38 ~ -1.17E-38	|소수점 아래 7자리까지 표현
+|DOUBLE, REAL|	8|	-1.22E-308 ~ 1.79E+308	|소수점 아래 15자리까지 표현
+|DECIMAL(m,[d]), NUMBER(m,[d])|	5~17|	-10^38+1 ~ 10^38-1	|전체 자릿수(m)와 소수점 이하 자릿수(d)를 가진 숫자형 예) decimal(5,2)는 전체 자릿수를 5자리로 하되, 그 중 소수점 이하를 2자리로 하겠다.
+
+---
+
+|데이터 형식	|바이트 수	|설명|
+|---|---|---
+CHAR(n)	|1 ~ 255	|고정길이 문자형 n을 1부터 255까지 지정 그냥 CHAR만 쓰면 CHAR(1)과 동일
+VARCHAR(n)	|1 ~ 65535	|가변길이 문자형 n을 사용하면 1부터 65535까지 지정
+BINARY(n)	|1 ~ 255	|고정길이의 이진 데이터 값
+VARBINARY(n)	|1 ~ 255	|가변길이의 이진 데이터 값
+TINYTEXT	|1 ~ 255	|255 크기의 TEXT 데이터 값
+TEXT	|1 ~ 65535	|N 크기의 TEXT 데이터 값
+MEDIUMTEXT	|1 ~ 16777215	|16777215 크기의 TEXT 데이터 값
+LONGTEXT	|1 ~ 4294967295	|최대 4GB 크기의 TEXT 데이터 값
+TINYBLOB	|1 ~ 255	|255 크기의 BLOB 데이터 값
+BLOB	|1 ~ 65535	|N 크기의 BLOB 데이터 값
+MEDIUMBLOB	|1 ~ 16777215	|16777215 크기의 BLOB 데이터 값
+LONGBLOB	|1 ~ 4294967295	|최대 4GB 크기의 BLOB 데이터 값
+ENUM(값들...)	|1 또는 2	|최대 65535개의 열거형 데이터 값
+SET(값들...)	|1, 2, 3, 4, 8	|최대 64개의 서로 다른 데이터 값
+
+---
+
+~~~python
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+sql = "CREATE TABLE IF NOT EXISTS corpCode(\
+                corp_code VARCHAR(8),\
+                corp_name VARCHAR(100),\
+                stock_code VARCHAR(6),\
+                modify_date TIMESTAMP\
+            )"
+db.cursor().execute(sql)
+db.commit()
+~~~
+~~~python
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+sql = "CREATE TABLE IF NOT EXISTS consolidatedData(\
+        rceptNo VARCHAR(14),\
+        consolidatedEquity BIGINT,\
+        consolidatedliability BIGINT,\
+        consolidatedNetIncome BIGINT,\
+        consolidatedGrossProfit BIGINT,\
+        consolidatedOperatingProfit BIGINT,\
+        consolidatedConprehensiveNetIncome BIGINT,\
+        consolidatedConprehensiveGrossProfit BIGINT,\
+        consolidatedConprehensiveOperatingProfit BIGINT,\
+        consolidatedOperatingActivities BIGINT\
+        )"
+db.cursor().execute(sql)
+db.commit()
+~~~
+### **insert data**
+---
+~~~python
+def get_values_part(self, data : dataclass):
+    dic = data.dict()
+    values = dic.values()
+
+    values_part_lst = [self.get_string_format(value) for value in values]
+    values_part = ', '.join(values_part_lst)
+    return values_part
+
+values_part = get_values_part(data)
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+sql = f"insert into corpCode values ({values_part})"
+db.cursor().execute(sql)
+db.commit()
+~~~
+### **query data**
+---
+~~~python
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+c = db.cursor()
+sql = 'select * from article_info'
+c.execute(sql)
+for data in c.fetchall()
+  print(data)
 ~~~
 
 ## **sqlite**
@@ -5272,9 +5451,8 @@ PycharmProjects
 ~~~python
 [in]
 import sys
-parentPath='c:/Users/user/PycharmProjects' # parent 경로
-sys.path.append(parentPath) # 경로 추가
-
+from pathlib import Path
+sys.path.append(str(Path.cwd())) # 경로 추가
 from InPracticeEmploy import normalPayroll # from 다른 폴더(모듈) import 다른 파일
 ~~~
 
@@ -5312,6 +5490,14 @@ print(os.path.exists(filePath))
 [out]
 True
 True
+~~~
+
+- 파일리스트 확인
+~~~python
+[in]
+import os
+path = "./"
+os.listdir(path)
 ~~~
 
 - folder 생성하기
