@@ -2240,6 +2240,251 @@ df2
 2013-01-06 -0.673690 -0.113648 -1.478427 -5 -5.0
 ~~~
 
+### **MultiIndex**
+---
+~~~python
+                     A         B         C
+first second                              
+bar   one     0.895717  0.410835 -1.413681
+      two     0.805244  0.813850  1.607920
+baz   one    -1.206412  0.132003  1.024180
+      two     2.565646 -0.827317  0.569605
+foo   one     1.431256 -0.076467  0.875906
+      two     1.340309 -1.187678 -2.211372
+qux   one    -1.170299  1.130127  0.974466
+      two    -0.226169 -1.436737 -2.006747
+~~~
+~~~python
+[in]
+df.loc[("bar", "two")]
+
+[out] 
+A    0.805244
+B    0.813850
+C    1.607920
+Name: (bar, two), dtype: float64
+~~~
+~~~python
+[in]
+df.loc[("bar", "two"), "A"]
+
+[out] 
+0.8052440253863785
+~~~
+~~~python
+[in]
+df.loc["bar"]
+
+[out]
+               A         B         C
+second                              
+one     0.895717  0.410835 -1.413681
+two     0.805244  0.813850  1.607920
+~~~
+~~~python
+[in]
+df.loc["baz":"foo"]
+
+[out]
+                     A         B         C
+first second                              
+baz   one    -1.206412  0.132003  1.024180
+      two     2.565646 -0.827317  0.569605
+foo   one     1.431256 -0.076467  0.875906
+      two     1.340309 -1.187678 -2.211372
+~~~
+~~~python
+[in]
+df.loc[("baz", "two"):("qux", "one")] 
+
+[out]
+                     A         B         C
+first second                              
+baz   two     2.565646 -0.827317  0.569605
+foo   one     1.431256 -0.076467  0.875906
+      two     1.340309 -1.187678 -2.211372
+qux   one    -1.170299  1.130127  0.974466
+~~~
+~~~python
+[in]
+df.loc[("baz", "two"):"foo"]
+
+[out]
+                     A         B         C
+first second                              
+baz   two     2.565646 -0.827317  0.569605
+foo   one     1.431256 -0.076467  0.875906
+      two     1.340309 -1.187678 -2.211372
+~~~
+~~~python
+[in]
+df.loc[[("bar", "two"), ("qux", "one")]]
+
+[out]
+                     A         B         C
+first second                              
+bar   two     0.805244  0.813850  1.607920
+qux   one    -1.170299  1.130127  0.974466
+~~~
+
+~~~python
+# another example : there is a seies...
+A  c    1   
+   d    2   
+   e    3   
+B  c    4   
+   d    5   
+   e    6  
+
+[in]
+s.loc[[("A", "c"), ("B", "d")]]  # list of tuples
+
+[out]
+A  c    1
+B  d    5
+dtype: int64
+
+[in]
+s.loc[(["A", "B"], ["c", "d"])]  # tuple of lists
+
+[out]
+A  c    1
+   d    2
+B  c    4
+   d    5
+dtype: int64
+~~~
+
+~~~python
+lvl0           a         b     
+lvl1         bar  foo  bah  foo
+A0 B0 C0 D0    1    0    3    2
+         D1    5    4    7    6
+      C1 D0    9    8   11   10
+         D1   13   12   15   14
+      C2 D0   17   16   19   18
+...          ...  ...  ...  ...
+A3 B1 C1 D1  237  236  239  238
+      C2 D0  241  240  243  242
+         D1  245  244  247  246
+      C3 D0  249  248  251  250
+         D1  253  252  255  254
+~~~
+~~~python
+
+[in]
+dfmi.loc[(slice("A1", "A3"), slice(None), ["C1", "C3"]), :]
+
+[out]
+lvl0           a         b     
+lvl1         bar  foo  bah  foo
+A1 B0 C1 D0   73   72   75   74
+         D1   77   76   79   78
+      C3 D0   89   88   91   90
+         D1   93   92   95   94
+   B1 C1 D0  105  104  107  106
+...          ...  ...  ...  ...
+A3 B0 C3 D1  221  220  223  222
+   B1 C1 D0  233  232  235  234
+         D1  237  236  239  238
+      C3 D0  249  248  251  250
+         D1  253  252  255  254
+
+[24 rows x 4 columns]
+
+[in]
+idx = pd.IndexSlice
+
+dfmi.loc[idx[:, :, ["C1", "C3"]], idx[:, "foo"]]
+
+[out]
+lvl0           a    b
+lvl1         foo  foo
+A0 B0 C1 D0    8   10
+         D1   12   14
+      C3 D0   24   26
+         D1   28   30
+   B1 C1 D0   40   42
+...          ...  ...
+A3 B0 C3 D1  220  222
+   B1 C1 D0  232  234
+         D1  236  238
+      C3 D0  248  250
+         D1  252  254
+
+[in]
+dfmi.loc["A1", (slice(None), "foo")]
+
+[out]
+lvl0        a    b
+lvl1      foo  foo
+B0 C0 D0   64   66
+      D1   68   70
+   C1 D0   72   74
+      D1   76   78
+   C2 D0   80   82
+...       ...  ...
+B1 C1 D1  108  110
+   C2 D0  112  114
+      D1  116  118
+   C3 D0  120  122
+      D1  124  126
+
+[16 rows x 2 columns]
+
+[in]
+dfmi.loc[idx[:, :, ["C1", "C3"]], idx[:, "foo"]]
+
+[out]
+lvl0           a    b
+lvl1         foo  foo
+A0 B0 C1 D0    8   10
+         D1   12   14
+      C3 D0   24   26
+         D1   28   30
+   B1 C1 D0   40   42
+...          ...  ...
+A3 B0 C3 D1  220  222
+   B1 C1 D0  232  234
+         D1  236  238
+      C3 D0  248  250
+         D1  252  254
+
+[in]
+mask = dfmi[("a", "foo")] > 200
+dfmi.loc[idx[mask, :, ["C1", "C3"]], idx[:, "foo"]]
+
+[out]
+lvl0           a    b
+lvl1         foo  foo
+A3 B0 C1 D1  204  206
+      C3 D0  216  218
+         D1  220  222
+   B1 C1 D0  232  234
+         D1  236  238
+      C3 D0  248  250
+         D1  252  254
+
+[in]
+dfmi.loc(axis=0)[:, :, ["C1", "C3"]]
+
+[out]
+lvl0           a         b     
+lvl1         bar  foo  bah  foo
+A0 B0 C1 D0    9    8   11   10
+         D1   13   12   15   14
+      C3 D0   25   24   27   26
+         D1   29   28   31   30
+   B1 C1 D0   41   40   43   42
+...          ...  ...  ...  ...
+A3 B0 C3 D1  221  220  223  222
+   B1 C1 D0  233  232  235  234
+         D1  237  236  239  238
+      C3 D0  249  248  251  250
+         D1  253  252  255  254
+~~~
+
+
 ### **타입 변경**
 ---
 - df.to_numpy()
@@ -3966,6 +4211,29 @@ print(astuple(user))
 [out]
 {'number': 122, 'name': 'Kim', 'test': []}
 (122, 'Kim', [])
+~~~
+
+- dynamic dataclass
+~~~python
+# dataclasses.make_dataclass(cls_name, fields, *, bases=(), namespace=None, init=True, repr=True, eq=True, order=False, unsafe_hash=False, frozen=False)
+# bases는 상속클래스이며, 상속 클래스가 하나이면 (class, ) 이렇게 표현해야함
+
+C = make_dataclass('C',
+                   [('x', int),
+                     'y',
+                    ('z', int, field(default=5))],
+                   namespace={'add_one': lambda self: self.x + 1})
+
+# is equal to
+
+@dataclass
+class C:
+    x: int
+    y: 'typing.Any'
+    z: int = 5
+
+    def add_one(self):
+        return self.x + 1
 ~~~
 <br><br><br>
 

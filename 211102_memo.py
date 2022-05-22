@@ -190,50 +190,56 @@ from datetime import datetime
 #   for i in range(10):
 #       frobnicated.send('Sender %s' % i, message='hello')
 
-import sys
-parentPath='c:/Users/ajcltm/PycharmProjects' # parent 경로
-sys.path.append(parentPath) # 경로 추가
-import datetime
-import time
-from messageBot import telegramBot
-from blinker import signal
-from pandas_datareader import data as pdr
-import yfinance as yf
-import schedule
+# import sys
+# parentPath='c:/Users/ajcltm/PycharmProjects' # parent 경로
+# sys.path.append(parentPath) # 경로 추가
+# import datetime
+# import time
+# from messageBot import telegramBot
+# from blinker import signal
+# from pandas_datareader import data as pdr
+# import yfinance as yf
+# import schedule
 
-def receiver(sender, **kwargs):
-  now = kwargs['time']
-  ticker = kwargs['ticker']
-  time_str = f"{now.strftime('%Y-%m-%d %p %H:%M')}\n"
+# def receiver(sender, **kwargs):
+#   now = kwargs['time']
+#   ticker = kwargs['ticker']
+#   time_str = f"{now.strftime('%Y-%m-%d %p %H:%M')}\n"
 
-  try:
-    yf.pdr_override()
-    data = pdr.get_data_yahoo(ticker, start='2022-4-20', end='2022-4-20')
-    data = data.to_dict(orient='records')[0]
-    o, h, l, c, p = data['Open'], data['High'], data['Low'], data['Close'], ((data['Close']/data['Open'])-1)*100
-    data_str = f"[{ticker}]\nOpen :{o:0.2f}\nHigh :{h:0.2f}\nLow  :{l:0.2f}\nClose:{c:0.2f}\nPct  :{p:0.2f}%"
-  except:
-    data_str = "It's seem to be an little error..."
+#   try:
+#     yf.pdr_override()
+#     data = pdr.get_data_yahoo(ticker, start='2022-4-20', end='2022-4-20')
+#     data = data.to_dict(orient='records')[0]
+#     o, h, l, c, p = data['Open'], data['High'], data['Low'], data['Close'], ((data['Close']/data['Open'])-1)*100
+#     data_str = f"[{ticker}]\nOpen :{o:0.2f}\nHigh :{h:0.2f}\nLow  :{l:0.2f}\nClose:{c:0.2f}\nPct  :{p:0.2f}%"
+#   except:
+#     data_str = "It's seem to be an little error..."
 
-  print(time_str+data_str)
-  tb.send_message(time_str+data_str)
+#   print(time_str+data_str)
+#   tb.send_message(time_str+data_str)
 
-sg = signal('timer')
-sg.connect(receiver)
+# sg = signal('timer')
+# sg.connect(receiver)
 
-token = '5344052624:AAH6OUawVEknHCzBOIKixH3by3HNptGMkBA'
-tb = telegramBot.TelegramBot(token = token)
+# token = '5344052624:AAH6OUawVEknHCzBOIKixH3by3HNptGMkBA'
+# tb = telegramBot.TelegramBot(token = token)
 
-def work():
-  now = datetime.datetime.now()
-  sg.send('KimBot', time=now, ticker='QLD')
+# def work():
+#   now = datetime.datetime.now()
+#   sg.send('KimBot', time=now, ticker='QLD')
 
-def start_work():
-    schedule.every(1).minutes.do(work)
+# def start_work():
+#     schedule.every(1).minutes.do(work)
 
-schedule.every().days.at("00:43").do(start_work)
+# schedule.every().days.at("00:43").do(start_work)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
 
+s = pd.Series(
+    [1, 2, 3, 4, 5, 6],
+    index=pd.MultiIndex.from_product([["A", "B"], ["c", "d", "e"]]),
+)
+
+print(s)
