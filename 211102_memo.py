@@ -235,11 +235,20 @@ from datetime import datetime
 
 # while True:
 #     schedule.run_pending()
-#     time.sleep(1)
+# #     time.sleep(1)
 
-s = pd.Series(
-    [1, 2, 3, 4, 5, 6],
-    index=pd.MultiIndex.from_product([["A", "B"], ["c", "d", "e"]]),
-)
+# s = pd.Series(
+#     [1, 2, 3, 4, 5, 6],
+#     index=pd.MultiIndex.from_product([["A", "B"], ["c", "d", "e"]]),
+# )
 
-print(s)
+# print(s)
+
+def test(**kwargs):
+    a = kwargs['a']
+    print(a)
+
+
+test_dict = {'a' : 5, 'b': 6}
+
+test(5)

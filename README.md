@@ -575,6 +575,18 @@ ValueError: substring not found
 'a,b,c,d'
 ~~~
 
+- 리스트를 하나의 문자열로 반환
+~~~python
+[in]
+str_list = ['This', 'is', 'a', 'python tutorial']
+result = ' '.join(s for s in str_list)
+print(result)
+
+[out]
+This is a python tutorial
+~~~
+
+
 - 소문자를 대문자로 바꾸기(upper)
 ~~~python
 [in]
@@ -3520,6 +3532,87 @@ result = pd.merge(left, right, how="cross")
 14     K2     K1  A3  B3     K1     K0  C2  D2
 15     K2     K1  A3  B3     K2     K0  C3  D3
 ~~~
+### **apply**
+---
+~~~python
+df = pd.DataFrame([[4, 9]] * 3, columns=['A', 'B'])
+df
+   A  B
+0  4  9
+1  4  9
+2  4  9
+~~~
+~~~python
+[in]
+df.apply(np.sqrt)
+
+[out]
+     A    B
+0  2.0  3.0
+1  2.0  3.0
+2  2.0  3.0
+~~~
+~~~python
+[in]
+df.apply(np.sum, axis=0)
+
+[out]
+A    12
+B    27
+dtype: int64
+~~~
+~~~python
+[in]
+df.apply(np.sum, axis=1)
+
+[out]
+0    13
+1    13
+2    13
+dtype: int64
+~~~
+~~~python
+[in]
+df.apply(lambda x: [1, 2], axis=1)
+
+[out]
+0    [1, 2]
+1    [1, 2]
+2    [1, 2]
+dtype: object
+~~~
+~~~python
+[in]
+df.apply(lambda x: [1, 2], axis=1, result_type='expand')
+
+[out]
+   0  1
+0  1  2
+1  1  2
+2  1  2
+~~~
+~~~python
+[in]
+df.apply(lambda x: pd.Series([1, 2], index=['foo', 'bar']), axis=1)
+
+[out]
+   foo  bar
+0    1    2
+1    1    2
+2    1    2
+~~~
+~~~python
+[in]
+df.apply(lambda x: [1, 2], axis=1, result_type='broadcast')
+
+[out]
+   A  B
+0  1  2
+1  1  2
+2  1  2
+~~~
+
+
 
 ### **Series.str**
 ---
@@ -3986,6 +4079,19 @@ B
 A  2.241830 -1.028115 -2.363137       NaN       NaN  2.001971  2.786113 -0.043211  1.922577       NaN       NaN  0.128491
 B -0.676843  0.005518       NaN  0.867024  0.316495       NaN  1.368280 -1.103384       NaN -2.128743 -0.194294       NaN
 C -1.077692  1.399070  1.177566       NaN       NaN  0.352360 -1.976883  1.495717 -0.263660       NaN       NaN  0.872482
+~~~
+
+### **Pandas Options**
+---
+- 출력포맷 변경하기
+~~~python
+
+import pandas as pd
+pd.options.display.float_format = '{:.02f}'.format
+
+#            date  funding  openCashValue
+# 0    1995-05-02     0.00           0.00
+# 1    1995-05-03     0.00           0.00
 ~~~
 <br><br><br>
 
@@ -5774,6 +5880,19 @@ os.listdir(path)
 import os
 dirPath = Path.home().joinpath('Desktop')/'testFolder'
 os.makedirs(dirPath)
+~~~
+
+- 확장자 알아내기
+~~~python
+[in]
+import os
+file_path = 'C:/Users/Sim/Desktop/test/c1.txt'
+print(os.path.splitext(file_path))
+print("확장자: ", os.path.splitext(file_path)[1])
+
+[out]
+('C:/Users/Sim/Desktop/test/c1', '.txt')
+확장자 : .txt
 ~~~
 
 ### **pathlib**
