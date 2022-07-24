@@ -4436,6 +4436,27 @@ print(m.dict(include={'foo', 'bar'}))
 print(m.dict(exclude={'foo', 'bar'}))
 #> {'banana': 3.14}
 ~~~
+- None 처리
+~~~python 
+class ComplexModel(BaseModel):
+    complexNo:str
+    complexName:str
+    dongNo:str
+    realEstateTypeCode:str
+    cortarAddress:str
+    detailAddress:str
+    totalHouseholdCount:int
+    totalBuildingCount:int
+    highFloor:int
+    lowFloor:int
+    useApproveYmd:Optional[datetime]
+
+    @validator('useApproveYmd', always=True)
+    def deal_with_none(cls, v, values):
+        if not v:
+            return None
+        return v
+~~~
 
 
 <br><br><br>
@@ -4640,7 +4661,7 @@ CREATE SCHEMA krxData DEFAULT CHARACTER SET utf8;
 |BIGINT|	8|	약 -900경 ~ +900경	|정수
 |FLOAT|	4|	-3.40E+38 ~ -1.17E-38	|소수점 아래 7자리까지 표현
 |DOUBLE, REAL|	8|	-1.22E-308 ~ 1.79E+308	|소수점 아래 15자리까지 표현
-|DECIMAL(m,[d]), NUMBER(m,[d])|	5~17|	-10^38+1 ~ 10^38-1	|전체 자릿수(m)와 소수점 이하 자릿수(d)를 가진 숫자형 예) decimal(5,2)는 전체 자릿수를 5자리로 하되, 그 중 소수점 이하를 2자리로 하겠다.
+|DECIMAL(m,[d]), NUMBER(m,[d])|	5~17|	-10^38+1 ~ 10^38-1	|전체 자릿수(m)와 소수점 이하 자릿수(d)를 가진 숫자형 예) decimal(5,2)는 전체 자릿수를 5자리로 하되, 그 중 소수점 이하를 2자리로 함
 
 ---
 
