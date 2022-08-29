@@ -5,20 +5,6 @@
 - 정말 기본적인 설치만 한다. 리눅스 설치는 다시 알아봐야겠지만 윈도우는 그냥 설치파일 받아서 next, next 진행하면 된다.
 <br><br>
 
-#### **create-react-app 설치**
----
-- npm 으로 설치하면 됨
-<br><br>
-
-#### **타입스크립트로 시작하기**
----
-~~~
-npx create-react-app tictactoe-app --template=typescript
-cd boostrap-app
-npm start
-~~~
-<br>
-
 #### **타입스크립트 설치**
 ---
 ~~~
@@ -26,6 +12,23 @@ npm install typescript
 npx tsc
 ~~~
 <br>
+
+
+#### **create-react-app 설치**
+---
+- npm 으로 설치하면 됨
+<br><br>
+
+#### **타입스크립트로 시작하기**
+---
+- project name에 대문자가 들어가면 에러가 발생함
+- project folder를 위치시킬 결로로 이동한 상태에서 명령해야함
+~~~
+npx create-react-app tictactoe-app --template=typescript
+npm start
+~~~
+<br>
+
 
 컴파일 - ts 파일을 js 로 변환
 ~~~
@@ -89,4 +92,35 @@ function App() {
 }
  
 export default App;
+~~~
+
+#### **react element**
+---
+~~~typescript
+[in]
+import React from 'react';
+
+function App() {
+  const element = <h1 className="header">This is JSX</h1>
+  console.log(element)
+  return (
+    <div className="App">
+      
+    </div>
+  );
+}
+
+export default App;
+
+[out]
+$$typeof: Symbol(react.element)
+key: null
+props: {className: 'header', children: 'This is JSX'}
+ref: null
+type: "h1"
+_owner: FiberNode {tag: 0, key: null, stateNode: null, elementType: ƒ, type: ƒ, …}
+_store: {validated: false}
+_self: undefined
+_source: {fileName: 'C:\\Users\\ajcltm\\PycharmProjects\\ajcltmblog\\src\\App.tsx', lineNumber: 4, columnNumber: 19}
+[[Prototype]]: Object
 ~~~
