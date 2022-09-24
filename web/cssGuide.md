@@ -1,3 +1,10 @@
+### **reset**
+---
+- 터미널 창에 npm i styled-reset 를 입력하여 모듈 설치
+~~~tsx
+import { Reset} from 'styled-reset';
+~~~
+
 ### **units**
 ---
 - px : 픽셀(화소) 단위. 22인치 LCD 모니터의 경우 해상도가 1680*1050인데 이것은 가로 1680개의 픽셀, 세로에 1050개의 픽셀을 가짐
@@ -619,5 +626,120 @@ button:hover {
     background-color: rgba(0,79,255, 0.9)
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 79, 255, 0.6); /* x y blur spread color */
+}
+~~~
+
+### **dropdown memu**
+---
+~~~html
+<!-- html -->
+<div className="dropdown">
+    <button className="link"> about </button>
+    <div className="dropdown-menu">
+        Dropdown Content
+    </div>
+</div>
+~~~
+~~~css
+/* css */
+.dropdown {
+    position: relative;
+    margin-right: auto;
+    height: 100%;
+}
+
+.link {
+    margin: 0px;
+    padding: 0px;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    height: 100%;
+    background-color: inherit;
+    cursor: pointer;
+}
+
+.link:hover {
+    transform: scale(1.05);
+    color: #61DAFB;
+    transition: .3s;
+}
+
+.dropdown-menu {
+    position: absolute;
+    color: white;
+    font-size: 1.1rem;
+    left: 0;
+    top: calc(100%+.25rem);
+    background-color: inherit;
+    border-radius: .25rem;
+    box-shadow: 5px 5px 5px 0 rgba(0,0,0,.5);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    z-index: -1;
+}
+
+.dropdown > .link:focus + .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
+}
+~~~
+### **login form**
+---
+~~~html
+<!-- html -->
+<form className="login-containder">
+    <label className="login-label">ID</label>
+    <input type='text' placeholder="id" className="login-input" />
+    <label className="login-label">Password</label>
+    <input type='text' placeholder="password" className="login-input" />
+    <input type="submit" value="login" className="login-submit"/>
+</form>
+~~~
+~~~css
+.login-containder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    color: white;
+    font-size: 1.1rem;
+    left: 0;
+    top: calc(100%+.25rem);
+    background-color: #2d2d2d;
+    border-radius: .25rem;
+    box-shadow: 5px 5px 5px 0 rgba(0,0,0,.5);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    z-index: -1;
+}
+
+.login-label {
+    align-self: flex-start;
+    margin-left: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.login-input {
+    margin: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.login-submit {
+    align-self: stretch;
+    background-color: #171a27;
+    color: white;
+    font-weight: bold;
+    margin: 5px;
+    padding: 5px;
+    height: 2.2rem;
 }
 ~~~
