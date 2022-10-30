@@ -572,7 +572,7 @@ center, start, end, flex-start, flex-end, space-between, space-around, space-eve
     flex-direction: column;
 }
 
-.flex-item-image {
+.flex-item-image {()
     flex: auto;
     /* flex: 1 1 auto */
 }
