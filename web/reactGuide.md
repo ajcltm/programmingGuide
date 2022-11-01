@@ -267,6 +267,113 @@ function ArchiveNav(props:ArchiveNavProps) {
 export default ArchiveNav;
 ~~~
 
+#### **Hook**
+---
+- useState
+~~~jsx
+function Counter({initialCount}) {
+  const [count, setCount] = useState(initialCount);
+  return (
+    <>
+      Count: {count}
+      <button onClick={() => setCount(initialCount)}>Reset</button>
+      <button onClick={() => setCount(prevCount => prevCount - 1)}>-</button>
+      <button onClick={() => setCount(prevCount => prevCount + 1)}>+</button>
+    </>
+  );
+}
+~~~
+- useState 사용 시 갱신 객체 합치기
+~~~jsx
+const [state, setState] = useState({});
+setState(prevState => {
+  // Object.assign would also work
+  return {...prevState, ...updatedValues};
+});
+~~~
+
+- useEffect
+<br> (!) effect를 수행하고 (mount를 하거나 unmount 할 때) 그것을 한 번만 실행하고 싶다면 두 번째 인자로 빈 배열([])을 전달
+~~~jsx
+useEffect(
+  () => {
+    const subscription = props.source.subscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
+  },
+  [props.source],
+);
+~~~
+
+- useContext
+<br> - context 객체(React.createContext에서 반환된 값)을 받아 그 context의 현재 값을 반환
+<br> - context의 현재 값은 트리 안에서 이 Hook을 호출하는 컴포넌트에 가장 가까이에 있는 <MyContext.Provider>의 value prop에 의해 결정
+~~~jsx
+const themes = {
+  light: {
+    foreground: "#000000",
+    background: "#eeeeee"
+  },
+  dark: {
+    foreground: "#ffffff",
+    background: "#222222"
+  }
+};
+
+const ThemeContext = React.createContext(themes.light);
+
+function App() {
+  return (
+    <ThemeContext.Provider value={themes.dark}>
+      <Toolbar />
+    </ThemeContext.Provider>
+  );
+}
+
+function Toolbar(props) {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+function ThemedButton() {
+  const theme = useContext(ThemeContext);
+  return (
+    <button style={{ background: theme.background, color: theme.foreground }}>
+      I am styled by theme context!
+    </button>
+  );
+}
+~~~
+
+- useMemo
+<br> - “생성(create)” 함수와 그것의 의존성 값의 배열을 전달하여야 함. useMemo는 의존성이 변경되었을 때에만 메모이제이션된 값만 다시 계산. 이 최적화는 모든 렌더링 시의 고비용 계산을 방지
+<br> - useMemo로 전달된 함수는 렌더링 중에 실행된다는 것에 주의. 통상적으로 렌더링 중에는 하지 않는 것을 이 함수 내에서 하면 안됨
+~~~jsx
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+~~~
+
+- useRef
+<br> \<div ref={myRef} />를 사용하여 React로 ref 객체를 전달하면, React는 노드가 변경될 때마다 변경된 DOM 노드에 .current 프로퍼티를 설정
+~~~jsx
+function TextInputWithFocusButton() {
+  const inputEl = useRef(null);
+  const onButtonClick = () => {
+    // `current` points to the mounted text input element
+    inputEl.current.focus();
+  };
+  return (
+    <>
+      <input ref={inputEl} type="text" />
+      <button onClick={onButtonClick}>Focus the input</button>
+    </>
+  );
+}
+~~~
+
 #### **react-router**
 ---
 - 기본적인 router 구조
