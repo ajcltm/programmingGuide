@@ -6118,6 +6118,17 @@ dirPath = Path.home().joinpath('Desktop')/'testFolder'
 os.makedirs(dirPath)
 ~~~
 
+- folder 삭제하기
+~~~python
+# folder 안에 파일이 있더라도 삭제 가능
+
+from pathlib import Path
+import shutil
+
+folder_path = Path().cwd().joinpath('test', 'test_temp_folder')
+shutil.rmtree(folder_path)
+~~~
+
 - 확장자 알아내기
 ~~~python
 [in]
