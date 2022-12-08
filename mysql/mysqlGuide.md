@@ -2,11 +2,11 @@
 ---
 - 아래 모두 database를 생상하는 동일한 쿼리임
 ~~~sql
-CREATE SCHEMA schemaName DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA schemaName DEFAULT CHARACTER SET utf8mb4;
 ~~~
 
 ~~~sql
-CREATE database databaseName DEFAULT CHARACTER SET utf8;
+CREATE database databaseName DEFAULT CHARACTER SET utf8mb4;
 ~~~
 
 ### **database 삭제**
@@ -81,6 +81,34 @@ UPDATE tableName SET email='example@gmail.com' WHERE name='Lee';
 9. DISTINCT
 10. ORDER BY
 11. TOP
+~~~
+
+### **INDEX**
+---
+
+- 인덱스 생성
+~~~sql
+CREATE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...)
+~~~
+
+- UNIQUE 인덱스 생성
+~~~sql
+CREATE UNIQUE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...)
+~~~
+
+- 인덱스 추가
+~~~sql
+ALTER TABLE 테이블명 ADD INDEX 인덱스명 (필드이름1, 필드이름2, ...)
+~~~
+
+- 인덱스 삭제
+~~~sql
+ALTER TABLE 테이블명 DROP INDEX 인덱스명
+~~~
+
+- 인덱스 정보 보기
+~~~sql
+SHOW INDEX FROM 테이블이름
 ~~~
 
 ### **DATEDIFF / TIMESTAMPDIFF**
