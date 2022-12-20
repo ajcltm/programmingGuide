@@ -56,3 +56,9 @@ git clone https://github.com/ajcltm/projectName.git
 ~~~
 git reset --soft HEAD^
 ~~~
+
+#### **staged 확인하기**
+---
+~~~
+git diff --name-only --cached
+~~~
