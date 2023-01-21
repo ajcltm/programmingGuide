@@ -1209,7 +1209,80 @@ print(data)
 ~~~
 <br><br><br>
 
+## **Json**
+---
+- json to python object
+~~~python
+import json
 
+json_string = '''{
+    "id": 1,
+    "username": "Bret",
+    "email": "Sincere@april.biz",
+    "address": {
+        "street": "Kulas Light",
+        "suite": "Apt. 556",
+        "city": "Gwenborough",
+        "zipcode": "92998-3874"
+    },
+    "admin": false,
+    "hobbies": null
+}'''
+
+json_object = json.loads(json_string)
+~~~
+
+- python object to json
+~~~python
+import json
+
+json_object = {
+    "id": 1,
+    "username": "Bret",
+    "email": "Sincere@april.biz",
+    "address": {
+        "street": "Kulas Light",
+        "suite": "Apt. 556",
+        "city": "Gwenborough",
+        "zipcode": "92998-3874"
+    },
+    "admin": False,
+    "hobbies": None
+}
+
+json_string = json.dumps(json_object, indent=2)
+~~~
+
+- json file load
+~~~python
+import json
+
+with open('input.json') as f:
+    json_object = json.load(f)
+~~~
+
+- json file save
+~~~python
+import json
+
+json_object = {
+    "id": 1,
+    "username": "Bret",
+    "email": "Sincere@april.biz",
+    "address": {
+        "street": "Kulas Light",
+        "suite": "Apt. 556",
+        "city": "Gwenborough",
+        "zipcode": "92998-3874"
+    },
+    "admin": False,
+    "hobbies": None
+}
+
+with open('output.json', 'w') as f:
+    json.dump(json_object, f, indent=2)
+~~~
+<br><br>
 
 ## **&#42;args & 	&#42;&#42;kwargs**
 ---
