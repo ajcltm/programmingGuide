@@ -1,3 +1,24 @@
+### Basic HTML structure
+---
+~~~html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- css style sheet -->
+    <link rel="stylesheet" href="./filter.css">
+    <title>Filter Project</title>
+</head>
+<body>
+  <!-- javascript -->
+   <script src="./filter.js"></script>
+</body>
+</html>
+~~~
+
 ### HTML Element Reference - By Category
 ---
 - Basic HTML
@@ -251,5 +272,36 @@ Type|	Description
   <input type="text" id="lname" name="lname" value="Doe"><br><br>
   <input type="submit" value="Submit">
 </form>
+~~~
+
+- table
+~~~html
+<table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Points</th>
+  </tr>
+  <tr>
+    <td>Peter</td>
+    <td>Griffin</td>
+    <td>$100</td>
+  </tr>
+  <tr>
+    <td>Lois</td>
+    <td>Griffin</td>
+    <td>$150</td>
+  </tr>
+  <tr>
+    <td>Joe</td>
+    <td>Swanson</td>
+    <td>$300</td>
+  </tr>
+  <tr>
+    <td>Cleveland</td>
+    <td>Brown</td>
+    <td>$250</td>
+  </tr>
+</table>
 ~~~
 
