@@ -12,24 +12,22 @@ CREATE SCHEMA naverland DEFAULT CHARACTER SET utf8mb4;
 ---
 - basic type
 
-|데이터 형식	|바이트 수	|설명|
-|---|---|---
-CHAR(n)	|1 ~ 255	|고정길이 문자형 n을 1부터 255까지 지정 그냥 CHAR만 쓰면 CHAR(1)과 동일
-VARCHAR(n)	|1 ~ 65535	|가변길이 문자형 n을 사용하면 1부터 65535까지 지정
-BINARY(n)	|1 ~ 255	|고정길이의 이진 데이터 값
-VARBINARY(n)	|1 ~ 255	|가변길이의 이진 데이터 값
-TINYTEXT	|1 ~ 255	|255 크기의 TEXT 데이터 값
-TEXT	|1 ~ 65535	|N 크기의 TEXT 데이터 값
-MEDIUMTEXT	|1 ~ 16777215	|16777215 크기의 TEXT 데이터 값
-LONGTEXT	|1 ~ 4294967295	|최대 4GB 크기의 TEXT 데이터 값
-TINYBLOB	|1 ~ 255	|255 크기의 BLOB 데이터 값
-BLOB	|1 ~ 65535	|N 크기의 BLOB 데이터 값
-MEDIUMBLOB	|1 ~ 16777215	|16777215 크기의 BLOB 데이터 값
-LONGBLOB	|1 ~ 4294967295	|최대 4GB 크기의 BLOB 데이터 값
-ENUM(값들...)	|1 또는 2	|최대 65535개의 열거형 데이터 값
-SET(값들...)	|1, 2, 3, 4, 8	|최대 64개의 서로 다른 데이터 값
----
-<br> <br>
+|데이터 형식|바이트 수|설명|
+|---|---|---|
+|CHAR(n)	|1 ~ 255	|고정길이 문자형 n을 1부터 255까지 지정 그냥 CHAR만 쓰면 CHAR(1)과 동일
+|VARCHAR(n)	|1 ~ 65535	|가변길이 문자형 n을 사용하면 1부터 65535까지 지정
+|BINARY(n)	|1 ~ 255	|고정길이의 이진 데이터 값
+|VARBINARY(n)	|1 ~ 255	|가변길이의 이진 데이터 값
+|TINYTEXT	|1 ~ 255	|255 크기의 TEXT 데이터 값
+|TEXT	|1 ~ 65535	|N 크기의 TEXT 데이터 값
+|MEDIUMTEXT	|1 ~ 16777215	|16777215 크기의 TEXT 데이터 값
+|LONGTEXT	|1 ~ 4294967295	|최대 4GB 크기의 TEXT 데이터 값
+|TINYBLOB	|1 ~ 255	|255 크기의 BLOB 데이터 값
+|BLOB	|1 ~ 65535	|N 크기의 BLOB 데이터 값
+|MEDIUMBLOB	|1 ~ 16777215	|16777215 크기의 BLOB 데이터 값
+|LONGBLOB	|1 ~ 4294967295	|최대 4GB 크기의 BLOB 데이터 값
+|ENUM(값들...)	|1 또는 2	|최대 65535개의 열거형 데이터 값
+|SET(값들...)	|1, 2, 3, 4, 8	|최대 64개의 서로 다른 데이터 값
 
 - Number type 
 
@@ -51,13 +49,13 @@ SET(값들...)	|1, 2, 3, 4, 8	|최대 64개의 서로 다른 데이터 값
 ### **Connect DB**
 ---
 ~~~python
-db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8mb4')
 ~~~
 
 ### **Create Table**
 ---
 ~~~python
-db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8mb4')
 sql = "CREATE TABLE IF NOT EXISTS corpCode(\
                 corp_code VARCHAR(8),\
                 corp_name VARCHAR(100),\
@@ -68,7 +66,7 @@ db.cursor().execute(sql)
 db.commit()
 ~~~
 ~~~python
-db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8')
+db = pymysql.connect(host='localhost', port=3306, user='root', passwd='2642805', db='fundamentalData', charset='utf8mb4')
 sql = "CREATE TABLE IF NOT EXISTS consolidatedData(\
         rceptNo VARCHAR(14),\
         consolidatedEquity BIGINT,\

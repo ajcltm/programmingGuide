@@ -7,7 +7,7 @@ import { Reset} from 'styled-reset';
 
 ### **units**
 ---
-- px : 픽셀(화소) 단위. 22인치 LCD 모니터의 경우 해상도가 1680*1050인데 이것은 가로 1680개의 픽셀, 세로에 1050개의 픽셀을 가짐
+- px : 픽셀(화소) 단위. 22인치 LCD 모니터의 경우 해상도가 1680 * 1050인데 이것은 가로 1680개의 픽셀, 세로에 1050개의 픽셀을 가짐
 - % : 백분율의 상대 단위. 요소에 지정된 size(상속되었거나 디폴트값)에 상대적인 size를 설정함
 - em: 요소 글꼴 크기의 배수
 - rem: root 요소 글꼴 크기의 배수
@@ -35,6 +35,65 @@ box-item2 {
 }
 /* 보통의 경우 이렇게 모든 box에 적용해두는 편이 좋음 */
 ~~~ 
+
+### **display
+---
+#### block
+- 특징
+~~~
+- 항상 새로운 줄에서 시작
+- 가로 너비를 부모 요소의 100% 차지
+- `width`와 `height` 속성을 사용 가능
+- 마진과 패딩을 사용 가능
+~~~
+- 주요 태그
+~~~
+- `<div>`
+- `<p>`
+- `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`
+- `<ul>`, `<ol>`, `<li>`
+- `<header>`, `<footer>`, `<nav>`, `<section>`, `<article>`, `<aside>`
+- `<blockquote>`
+- `<form>`
+~~~
+
+#### **inline
+- 특징
+~~~
+- 새로운 줄에서 시작하지 않습니다.
+- 콘텐츠 크기만큼 가로 너비를 차지합니다.
+- `width`와 `height` 속성을 사용할 수 없습니다.
+- 마진과 패딩을 사용할 수 있지만, 수직 방향은 제한적입니다.
+~~~
+- 주요 태그
+~~~
+- `<span>`
+- `<a>`
+- `<strong>`
+- `<em>`
+- `<b>`, `<i>`, `<u>`
+- `<label>`
+- `<br>`
+~~~
+
+#### **inline
+- 특징
+~~~
+- 새로운 줄에서 시작하지 않습니다.
+- 콘텐츠 크기 또는 설정된 `width`와 `height`만큼 가로 너비를 차지합니다.
+- `width`와 `height` 속성을 사용할 수 있습니다.
+- 마진과 패딩을 사용할 수 있습니다.
+~~~
+- 주요 태그
+~~~
+- `<img>` (기본적으로 inline-block)
+- `<button>` (기본적으로 inline-block)
+- `<input>` (기본적으로 inline-block)
+- `<select>` (기본적으로 inline-block)
+- `<textarea>` (기본적으로 inline-block)
+- `<video>`
+- `<iframe>`
+~~~
 
 ### **margin**
 ---
@@ -88,7 +147,7 @@ span.inline {
 }
 
 span.inline-block {
-    display: iblibe-block;
+    display: inline-block;
 }
 ~~~
 
@@ -212,13 +271,13 @@ ul > li{
 
 - white-space는 스페이스와 탭, 줄바꿈, 자동줄바꿈을 어떻게 처리할지 정하는 속성. 기본값은 normal임
 
-|구분|스페이스와 탭 처리|엔터 처리|자동줄바꿈 유무|
-|-|-|-|-|
-|nornal|병합|병합|Y|
-|nowrap|병합|병합|X|
-|pre|보존|보존|X|
-|pre-wrap|보존|보존|Y|
-|pre-line|병합|보존|Y|
+| 구분       | 스페이스와 탭 처리 | 엔터 처리 | 자동줄바꿈 유무 |
+| -------- | ---------- | ----- | -------- |
+| nornal   | 병합         | 병합    | Y        |
+| nowrap   | 병합         | 병합    | X        |
+| pre      | 보존         | 보존    | X        |
+| pre-wrap | 보존         | 보존    | Y        |
+| pre-line | 병합         | 보존    | Y        |
 
 (병합 예를 들어 연속된 두개의 스페이스를 한개의 스페이스로 처리한다는 의미이고, 보존은 2개의 스페이스로 처리한다는 의미)
 <br><br><br>
@@ -230,7 +289,7 @@ ul > li{
 
 ### **Grid**
 ---
-- 2 * 6 grid 적용
+- 2 * 3 grid 적용
 ~~~css
 /*css file*/ 
 .container {
@@ -419,9 +478,10 @@ ul > li{
 
 ### **flex**
 ---
-#### **flex container**
----
-- flex : flex-box 속성을 적용한다.  
+##### **flex container**
+
+##### display : flex
+- flex-box 속성을 적용한다.  
 ~~~css
 .flex-container {
     display: flex;
@@ -440,7 +500,9 @@ row, row-reverse, column, column-reverse
     flex-direction: column;
 }
 ~~~
-- flex-wrap : flex-container의 width보다 flex-item들의 width의 합계가 더 큰 경우, 한줄로 표현할 것인지, 여루줄로 표현할 것인지를 지정  
+
+##### flex-wrap
+- flex-container의 width보다 flex-item들의 width의 합계가 더 큰 경우, 한줄로 표현할 것인지, 여루줄로 표현할 것인지를 지정  
 nowrap으로 지정하면, flex-item을 개행하지 않고 1행에 배치하며, 각 flex-item의 폭은 flex-container에 들어갈 수 있는 크기로 축소됨 (기본값임), 하지만 flex-item의 크기가 한계를 넘어 축소되면 item의 배치가 flex-container를 넘어가는 일이 발생하는 데, 이때 overflow를 auto로 지정하면 스크롤이 생기며 container를 넘지 않게 됨
 ~~~css
 .flex-container {
@@ -449,7 +511,9 @@ nowrap으로 지정하면, flex-item을 개행하지 않고 1행에 배치하며
     overflow: auto;
 }
 ~~~
-- justify-content : flex-container의 주축을 기준으로 flex-item을 정렬  
+
+##### justify-content
+- flex-container의 주축을 기준으로 flex-item을 정렬  
 center, start, end, flex-start, flex-end, left, right, space-around, space-between, space-evenly
 ~~~css
 .flex-container {
@@ -457,7 +521,8 @@ center, start, end, flex-start, flex-end, left, right, space-around, space-betwe
     justify-content: space-around;
 }
 ~~~
-- align-items : flex-container의 교차축을 기준으로 flex-item을 정렬   
+##### align-items
+- flex-container의 교차축을 기준으로 flex-item을 정렬   
 normal, stretch, center, start, end, flex-start, flex-end, baseline, first baseline, last baseline, safe center, unsafe center ...
 ~~~css
 .flex-container {
@@ -465,7 +530,8 @@ normal, stretch, center, start, end, flex-start, flex-end, baseline, first basel
     align-items: stretch;
 }
 ~~~
-- align-content : flex-container의 교착축을 기준으로 주축을 정렬  
+##### align-content
+- flex-container의 교착축을 기준으로 주축을 정렬  
 center, start, end, flex-start, flex-end, space-between, space-around, space-evenly, strecth, normal, baseline, first baseline, last baseline, safe center, unsafe center ...
 ~~~css
 .flex-container {
@@ -473,9 +539,16 @@ center, start, end, flex-start, flex-end, space-between, space-around, space-eve
     align-content: space-between;
 }
 ~~~
-- flex-grow : 0이면 flex-container의 크기가 켜저도 flex-item의 크기가 커지지 않고 유지됨. 1 이상이면 flex-item의 원래 크기에 상관없이 flex-container를 채우도록 flex-item의 크기가 커짐
-- flex-shrink : 0이면 flex-container의 크기가 flex-item의 크기보다 작아져도 flex-item의 크기가 줄어들지 않고 원래 크기로 유지됨. 1 이상이면 flex-container의 크기가 줄어들때 함께 줄어듬
-- flex-basis : flex-item으 기본 크기를 결정하는 속성. 기본값은 auto이며, item 안의 content 크기에 따라 자동으로 결정됨. width 처럼 단위값을 입력하면 해당 크기만큼의 크기를 가지지만 content의 크기와 상관없이 강제적으로 크기를 결정하는 width와 달리 유연하게 크기가 조절됨. 0px 로 설정하면 절대 크기가 되어 container에 맞쳐서 크기가 결정됨
+##### flex-grow
+-  0이면 flex-container의 크기가 켜저도 flex-item의 크기가 커지지 않고 유지됨. 1 이상이면 flex-item의 원래 크기에 상관없이 flex-container를 채우도록 flex-item의 크기가 커짐
+
+##### flex-shrink
+- 0이면 flex-container의 크기가 flex-item의 크기보다 작아져도 flex-item의 크기가 줄어들지 않고 원래 크기로 유지됨. 1 이상이면 flex-container의 크기가 줄어들때 함께 줄어듬
+
+##### flex-basis
+- flex-item으 기본 크기를 결정하는 속성. 기본값은 auto이며, item 안의 content 크기에 따라 자동으로 결정됨. width 처럼 단위값을 입력하면 해당 크기만큼의 크기를 가지지만 content의 크기와 상관없이 강제적으로 크기를 결정하는 width와 달리 유연하게 크기가 조절됨. 0px 로 설정하면 절대 크기가 되어 container에 맞쳐서 크기가 결정됨
+
+##### flex
 - flex 키워드로 설정하면 flex-grow, flex-shrink, flex-basis를 한꺼번에 설정할 수 있음
 
   |flex|flex-grow|flex-shrink|flex-basis|
@@ -484,8 +557,9 @@ center, start, end, flex-start, flex-end, space-between, space-around, space-eve
   |none|0|0|auto|
   |auto|1|1|auto|
   |양의 정수|숫자|1|0|
+  |1|1|1|0|
 
-
+##### 예시
 - 스크롤 없는 100% 레이아웃
 ~~~css
 .flex-container {
@@ -598,6 +672,120 @@ center, start, end, flex-start, flex-end, space-between, space-around, space-eve
 }
 ~~~
 
+### **의사 클래스(pseudo-classes)
+---
+#### **:hover
+- 요소 위에 마우스를 올렸을 때 적용됩니다.
+- 예: 메뉴 항목이나 버튼에 마우스를 올렸을 때 배경색이 변경되는 효과.
+~~~css
+button:hover {   background-color: lightblue; }
+~~~
+#### **:focus
+- 요소가 포커스를 받을 때 적용됩니다. 주로 폼 요소에 사용됩니다.
+- 예: 텍스트 입력 필드에 포커스가 갔을 때 테두리 색이 변경되는 효과.
+~~~css
+input:focus {
+  border-color: blue;
+}
+
+~~~
+
+#### **:active
+- 요소가 활성화된 상태(마우스 버튼을 누르고 있을 때)일 때 적용됩니다.
+- 예: 버튼을 클릭할 때 배경색이 변경되는 효과.
+~~~css
+a:active {
+  color: red;
+}
+~~~
+
+#### **:visited
+- 방문한 링크에 적용됩니다.
+~~~css
+a:visited {
+  color: purple;
+}
+~~~
+
+#### **:nth-child(n)
+- 부모 요소의 n번째 자식 요소에 적용됩니다.
+~~~css
+li:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+~~~
+
+#### **:first-child / :last-child
+- 부모 요소의 첫 번째 자식이나 마지막 자식 요소에 적용됩니다.
+~~~css
+p:first-child {
+  font-weight: bold;
+}
+~~~
+
+#### **:disabled / :enabled
+- 폼 요소가 비활성화되었거나 활성화되었을 때 적용됩니다.
+~~~css
+input:disabled { background-color: #ccc; }
+~~~
+
+#### **box-shadow
+---
+- `inset` (선택 사항): 이 값이 있으면 내부 그림자를 만듭니다.
+- `offset-x`: 그림자의 수평 오프셋(양수는 오른쪽, 음수는 왼쪽).
+- `offset-y`: 그림자의 수직 오프셋(양수는 아래쪽, 음수는 위쪽).
+- `blur-radius` (선택 사항): 그림자의 흐림 정도(값이 클수록 더 흐림).
+- `spread-radius` (선택 사항): 그림자의 확산 정도(양수는 커지고, 음수는 작아짐).
+- `color` (선택 사항): 그림자의 색상.
+~~~css
+box-shadow: [inset] offset-x offset-y blur-radius spread-radius color;
+~~~
+
+- 예시
+~~~css
+  .box1 {
+    width: 200px;
+    height: 100px;
+    background-color: lightblue;
+    box-shadow: 10px 10px 5px grey;
+  }
+
+  .box2 {
+    width: 200px;
+    height: 100px;
+    background-color: lightcoral;
+    box-shadow: inset 10px 10px 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .box3 {
+    width: 200px;
+    height: 100px;
+    background-color: lightgreen;
+    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .box4 {
+    width: 200px;
+    height: 100px;
+    background-color: lightgoldenrodyellow;
+    box-shadow: 10px 10px 5px grey, -5px -5px 10px red;
+  }
+~~~
+### **border-radius
+---
+~~~css
+.box4 {
+	border-radius: .5%;
+}
+~~~
+
+
+### **filter
+---
+~~~css
+filter: blur(5px);
+~~~
+
 
 ### **hover / box-shadow / transform**
 ~~~css
@@ -626,120 +814,5 @@ button:hover {
     background-color: rgba(0,79,255, 0.9)
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 79, 255, 0.6); /* x y blur spread color */
-}
-~~~
-
-### **dropdown memu**
----
-~~~html
-<!-- html -->
-<div className="dropdown">
-    <button className="link"> about </button>
-    <div className="dropdown-menu">
-        Dropdown Content
-    </div>
-</div>
-~~~
-~~~css
-/* css */
-.dropdown {
-    position: relative;
-    margin-right: auto;
-    height: 100%;
-}
-
-.link {
-    margin: 0px;
-    padding: 0px;
-    color: white;
-    font-size: 1.25rem;
-    font-weight: bold;
-    height: 100%;
-    background-color: inherit;
-    cursor: pointer;
-}
-
-.link:hover {
-    transform: scale(1.05);
-    color: #61DAFB;
-    transition: .3s;
-}
-
-.dropdown-menu {
-    position: absolute;
-    color: white;
-    font-size: 1.1rem;
-    left: 0;
-    top: calc(100%+.25rem);
-    background-color: inherit;
-    border-radius: .25rem;
-    box-shadow: 5px 5px 5px 0 rgba(0,0,0,.5);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-    z-index: -1;
-}
-
-.dropdown > .link:focus + .dropdown-menu {
-    opacity: 1;
-    transform: translateY(0px);
-    pointer-events: auto;
-}
-~~~
-### **login form**
----
-~~~html
-<!-- html -->
-<form className="login-containder">
-    <label className="login-label">ID</label>
-    <input type='text' placeholder="id" className="login-input" />
-    <label className="login-label">Password</label>
-    <input type='text' placeholder="password" className="login-input" />
-    <input type="submit" value="login" className="login-submit"/>
-</form>
-~~~
-~~~css
-.login-containder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    color: white;
-    font-size: 1.1rem;
-    left: 0;
-    top: calc(100%+.25rem);
-    background-color: #2d2d2d;
-    border-radius: .25rem;
-    box-shadow: 5px 5px 5px 0 rgba(0,0,0,.5);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-    z-index: -1;
-}
-
-.login-label {
-    align-self: flex-start;
-    margin-left: 10px;
-    color: white;
-    font-weight: bold;
-}
-
-.login-input {
-    margin: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 5px;
-}
-
-.login-submit {
-    align-self: stretch;
-    background-color: #171a27;
-    color: white;
-    font-weight: bold;
-    margin: 5px;
-    padding: 5px;
-    height: 2.2rem;
 }
 ~~~
