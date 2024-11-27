@@ -8,8 +8,8 @@ git init 입력
 #### **git 설정**
 ---
 ~~~git
-$ git config --global user.name "Kenneth"
-$ git config --global user.email "kenneth@pigno.se"
+git config --global user.name "Kenneth"
+git config --global user.email "kenneth@pigno.se"
 ~~~
 
 #### **github 원격등록**
@@ -25,7 +25,7 @@ git remote add origin https://github.com/ajcltm/projectName.git
 git remote -v
 ~~~
 
-#### **github 업로드***
+#### **github 업로드**
 ---
 - github에 업로드
 ~~~git
@@ -39,12 +39,6 @@ git push -f origin master
 - 또는 아래와 같이 입력해주고 창닫고(경고메세지는 무시) 다시 push 시도하면 됨
 ~~~
 git pull origin master 
-~~~
-
-#### **github 다운로드(clone)**
----
-~~~git
-git clone https://github.com/ajcltm/projectName.git
 ~~~
 
 #### **commit 방법**
@@ -81,6 +75,16 @@ $ git reset HEAD~2 --hard
 
 # 특정 리비전의 기록으로 인덱스는 버리고 워킹트리를 보존하여 리셋.
 $ git reset 991ee8c --mixed
+~~~
+
+#### **히스토리 조회**
+---
+~~~git
+git show [id] # commit id 앞 4자리
+git log  # 스페이스바 누르면 계속 조회 / q 누르면 종료
+git log --stat # 통계와 함께 조회
+git log --pretty=oneline  # short, full, fuller, format 옵션있음
+git log --pretty=format:"%h - %an - %cd - %cr -%s"  #format 예시
 ~~~
 #### **github clone 방법**
 ---
