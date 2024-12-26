@@ -64,7 +64,7 @@ mybatis.mapper-locations=classpath:mappers/*.xml
 		|-resources
 			|-mappers
 				|-webInfo.xml
-			|-static
+			|-static # 브라우저에서 /로 접근 가능. public 폴더도 동일 (ex: /css/style.css)
 				|-css
 					|-styles.css
 				|-images
@@ -73,6 +73,7 @@ mybatis.mapper-locations=classpath:mappers/*.xml
 					|-javascripts.js
 			|-templates
 				|-index.html
+			|-application.properties
 	|-test
 		|-java
 			|-org.hgtect.webdevsys
