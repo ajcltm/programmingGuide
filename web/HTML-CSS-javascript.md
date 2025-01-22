@@ -1450,142 +1450,112 @@ window.onclick = function(event) {
 ---
 - html
 ~~~html
-<div class="slider-container">  
-    <button class="moveBtn nextbtn">></button>  
-    <div class="slider-window">  
-        <ul class="slider-wrapper">  
-            <li class="slider-item">  
-                <img src="/images/court.jpg">  
-                <p class="slider-item-title">slider1</p>  
-            </li>            <li class="slider-item">  
-                <img src="/images/court.jpg">  
-                <p class="slider-item-title">slider2</p>  
-            </li>            <li class="slider-item">  
-                <img src="/images/court.jpg">  
-                <p class="slider-item-title">slider3</p>  
-            </li>            <li class="slider-item">  
-                <img src="/images/court.jpg">  
-                <p class="slider-item-title">slider4</p>  
-            </li>            <li class="slider-item">  
-                <img src="/images/court.jpg">  
-                <p class="slider-item-title">slider5</p>  
-            </li>        
-        </ul>
-    </div>
-    <button class="moveBtn backbtn"><</button>  
+<div class="bl_slider">
+	<div class="bl_slider_mvleft"><</div>
+	<div class="bl_slider_track">
+		<div class="bl_slider_item">a</div>
+		<div class="bl_slider_item">b</div>
+		<div class="bl_slider_item">c</div>
+	</div>
+	<div class="bl_slider_mvright">></div>
 </div>
 ~~~
 
 - css
 ~~~css
-.slider-container {  
-    position: relative;  
-    width: 900px;  
-    height: 200px;  
-    margin: 10px auto;  
-    border-radius: 10px;  
-    box-shadow: 5px 5px 5px rgba(100,100,100,.3);  
-}  
-  
-.slider-window {  
-    overflow: hidden;  
-    width: 100%;  
-    height: 100%;  
-}  
-  
-.slider-wrapper {  
-    display: flex;  
-    align-items: center;  
-    width: 100%;  
-    height: 100%;  
-    transition: transform .5s ease-in-out;  
-}  
-  
-.moveBtn {  
-    position: absolute;  
-    width: 50px;  
-    height: 50px;  
-    text-align: center;  
-    line-height: 50px;  
-    font-weight: 900;  
-    font-size: 2rem;  
-    color: rgba(100,100,100,.8);  
-    top: 50%;  
-    transform: translateY(-50%);  
-    background-color: rgba(100,100,100,0);  
-    border-radius: 50%;  
-}  
-  
-.nextbtn {  
-    right: -60px;  
-}  
-  
-.backbtn {  
-    left: -60px;  
-}  
-  
-.slider-item {  
-    /*position: relative;*/  
-    flex: 0 0 auto;  
-    width: 300px;  
-    height: 100%;  
-}  
-  
-.slider-item > img {  
-    width: 100%;  
+.bl_slider {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.bl_slider_mvleft {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.bl_slider_mvright {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    right: 5%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.bl_slider_track {
+    height: 100%;
+    display: flex;
+}
+
+.bl_slider_track > * {
+    flex: 0 0 300px;
 }
 ~~~
 
 - javascript
 ~~~javascript
-const slider_wrapper = document.getElementsByClassName("slider-wrapper")[0];  
-const slider_items = document.getElementsByClassName("slider-item");  
-const next_btn = document.getElementsByClassName("nextbtn")[0];  
-const back_btn = document.getElementsByClassName("backbtn")[0];  
-  
-const item_width = slider_items[0].clientWidth;  
-  
-next_btn.addEventListener("click" , handle_next_click);  
-back_btn.addEventListener("click" , handle_back_click);  
-  
-function handle_next_click(){  
-    moveNext();  
-    setTimeout(moveFristElToLast, 510);  
-}  
-  
-function handle_back_click(){  
-    moveLastElToFirst();  
-    setTimeout(moveBack, 10);  
-}  
-  
-function moveNext(){  
-    console.log("click : next button");  
-    slider_wrapper.style.transition = 'transform .5s ease-in-out'  
-    slider_wrapper.style.transform = `translateX(-${item_width}px)`;  
-}  
-  
-function moveFristElToLast() {  
-    slider_wrapper.style.transition = 'none'  
-    if (slider_wrapper.children.length > 0) {  
-        const firstEl = slider_wrapper.children[0];  
-        slider_wrapper.appendChild(firstEl);  
-    }  
-    slider_wrapper.style.transform = `translateX(0)`;  
-}  
-  
-function moveBack(){  
-    console.log("click : back button");  
-    slider_wrapper.style.transition = 'transform .5s ease-in-out'  
-    slider_wrapper.style.transform = `translateX(0)`;  
-}  
-  
-function moveLastElToFirst() {  
-    slider_wrapper.style.transition = 'none'  
-    if (slider_wrapper.children.length > 0) {  
-        const lastEl = slider_wrapper.lastElementChild;  
-        console.log(lastEl)  
-        slider_wrapper.insertBefore(lastEl, slider_wrapper.firstElementChild);  
-    }  
-    slider_wrapper.style.transform = `translateX(-${item_width}px)`;  
+const track = document.querySelector('.bl_slider_track');
+const slides = document.querySelectorAll('.bl_slider_item');
+const prevButton = document.querySelector('.bl_slider_mvleft');
+console.log(prevButton);
+const nextButton = document.querySelector('.bl_slider_mvright');
+console.log(nextButton);
+
+const slideCount = slides.length;
+let currentIndex = 0;
+
+// 클론 슬라이드 추가
+const firstClone = slides[0].cloneNode(true);
+const lastClone = slides[slideCount - 1].cloneNode(true);
+track.appendChild(firstClone); // 맨 뒤에 첫 슬라이드 복사
+track.insertBefore(lastClone, slides[0]); // 맨 앞에 마지막 슬라이드 복사
+
+// 초기 위치 설정
+const slideWidth = slides[0].offsetWidth;
+track.style.transform = `translateX(-${slideWidth}px)`;
+
+function moveToSlide(index) {
+    track.style.transition = 'transform 0.5s ease';
+    track.style.transform = `translateX(-${(index + 1) * slideWidth}px)`;
+    currentIndex = index;
+
+    // 무한 루프 처리
+    track.addEventListener('transitionend', () => {
+    if (currentIndex === slideCount) {
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${slideWidth}px)`;
+        currentIndex = 0;
+    }
+    if (currentIndex === -1) {
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${slideCount * slideWidth}px)`;
+        currentIndex = slideCount - 1;
+    }
+    });
 }
+
+function addEventListner_mvbtn() {
+    prevButton.addEventListener('click', () => {
+        console.log("click mvleft")
+        if (currentIndex > -1) {
+        moveToSlide(currentIndex - 1);
+        }
+    });
+
+    // 버튼 이벤트 핸들러
+    nextButton.addEventListener('click', () => {
+        if (currentIndex < slideCount) {
+        moveToSlide(currentIndex + 1);
+        }
+    });
+}
+
+addEventListner_mvbtn();
 ~~~
