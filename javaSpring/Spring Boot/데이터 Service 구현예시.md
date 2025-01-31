@@ -1,189 +1,160 @@
 - service
 ~~~java
-package org.hgtech.webdevsys.service;  
+package org.hgtech.worksystem.service;  
   
-import org.hgtech.webdevsys.DTO.WebInfoDTO;  
-import org.hgtech.webdevsys.domain.WebInfoVO;  
-import org.hgtech.webdevsys.repository.WebInfoRepository;  
+import org.hgtech.worksystem.DTO.MemberDTO;  
+import org.hgtech.worksystem.DTO.WorkDTO;  
+import org.hgtech.worksystem.domain.MemberVO;  
+import org.hgtech.worksystem.domain.WorkVO;  
+import org.hgtech.worksystem.repository.MemberRepository;  
+import org.hgtech.worksystem.repository.WorkRepository;  
 import org.modelmapper.ModelMapper;  
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Service;  
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
   
-import java.util.List;  
-import java.util.stream.Collectors;  
+@Service
+public class MemberService {
+    @Autowired
+    MemberRepository repository;
   
-@Service  
-public class WebInfoService {  
+    ModelMapper mapper = new ModelMapper();
   
-    @Autowired  
-    WebInfoRepository webInfoRepository;  
+	public int register(MemberDTO memberDTO) {  
+	    int newNum = 10000;  
+	    MemberDTO last = getLast();  
+	    if (last != null) {  
+	        newNum = Integer.parseInt(last.getMbId().substring(3))+1 ;  
+	    }  
+	  
+	    memberDTO.setMbId("mb-"+newNum);  
+	    memberDTO.setMbRegDate(LocalDate.now());  
+	    memberDTO.setMbModDate(LocalDate.now());  
+	    return repository.insert(mapper.map(memberDTO, MemberVO.class));  
+	}
   
-    @Autowired  
-    ModelMapper modelMapper;  
+    public MemberDTO getLast() {
+        return mapper.map(repository.selectLast(), MemberDTO.class);
+    }
+
+    public List<MemberDTO> getAll() {
+        return repository.selectAll().stream().map(vo -> mapper.map(vo, MemberDTO.class)).collect(Collectors.toList());
+    }
   
-    public void register(WebInfoDTO webInfoDTO) {  
-        WebInfoVO webInfoVO = modelMapper.map(webInfoDTO, WebInfoVO.class);  
-        webInfoRepository.insert(webInfoVO);  
-    }  
-  
-    public List<WebInfoDTO> getAll() {  
-        List<WebInfoVO> webInfoVOList = webInfoRepository.selectAll();  
-        List<WebInfoDTO> webInfoDTOList = webInfoVOList.stream().map(vo -> modelMapper.map(vo, WebInfoDTO.class)).collect(Collectors.toList());  
-        return webInfoDTOList;  
-    }  
-  
-    public WebInfoDTO getLast() {  
-        WebInfoVO webInfoVO = webInfoRepository.selectLast();  
-        WebInfoDTO webInfoDTO = modelMapper.map(webInfoVO, WebInfoDTO.class);  
-        return webInfoDTO;  
-    }  
-  
-    public WebInfoDTO getById(int id) {  
-        WebInfoVO webInfoVO = webInfoRepository.selectById(id);  
-        if (webInfoVO==null){  
-            return null;  
-        }  
-        WebInfoDTO webInfoDTO = modelMapper.map(webInfoVO, WebInfoDTO.class);  
-        return webInfoDTO;  
-    }  
-  
-    public List<WebInfoDTO> getByParentId(int id) {  
-        List<WebInfoVO> webInfoVOList = webInfoRepository.selectByParentId(id);  
-        List<WebInfoDTO> webInfoDTOList = webInfoVOList.stream().map(vo -> modelMapper.map(vo, WebInfoDTO.class)).collect(Collectors.toList());  
-        return webInfoDTOList;  
-    }  
-  
-    public void remove(int id) {  
-        webInfoRepository.delete(id);  
-    }  
-  
-    public void modify(WebInfoDTO webInfoDTO) {  
-        WebInfoVO webInfoVO = modelMapper.map(webInfoDTO, WebInfoVO.class);  
-        webInfoRepository.update(webInfoVO);  
-    }  
+    public MemberDTO getByMbId(int id) {
+        return mapper.map(repository.selectByMbId(id), MemberDTO.class);
+    }
+
+    public int remove(int id) {
+        return repository.delete(id);
+    }
+
+    public int modify(MemberDTO memberDTO) {
+        memberDTO.setMbModDate(LocalDateTime.now());
+        return repository.update(mapper.map(memberDTO, MemberVO.class));
+    }
 }
 ~~~
 
 - test
 ~~~java
-package org.hgtech.webdevsys.serviceTest;  
+package org.hgtech.worksystem.serviceTest;  
   
-import org.hgtech.webdevsys.DTO.WebInfoDTO;  
-import org.hgtech.webdevsys.service.WebInfoService;  
+import org.hgtech.worksystem.DTO.MemberDTO;  
+import org.hgtech.worksystem.service.MemberService;  
 import org.junit.jupiter.api.Assertions;  
 import org.junit.jupiter.api.Test;  
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.boot.test.context.SpringBootTest;  
   
+import java.time.LocalDate;  
 import java.time.LocalDateTime;  
-import java.util.ArrayList;  
-import java.util.List;  
 import java.util.Random;  
 import java.util.UUID;  
+
+@SpringBootTest
+public class MemberServiceTest {
+    @Autowired
+    MemberService service;
   
-@SpringBootTest  
-public class WebInfoServiceTest {  
+    public MemberDTO createDTO() {
+//      VO 객체 생성
+        MemberDTO dto = MemberDTO.builder()
+                .mbRegDate(createRandomDatetime())
+                .mbModDate(createRandomDatetime())
+                .mbUserName(createRandomString())
+                .mbUserBirth(createRandomDate())
+                .mbUserId(createRandomString())
+                .mbUserPw(createRandomString())
+                .build();
+        return dto;
+    }
   
-    @Autowired  
-    WebInfoService webInfoService;  
+    public String createRandomString() {
+        return UUID.randomUUID().toString();
+    }
   
-    private WebInfoDTO createWebInfoDTO() {  
-        LocalDateTime dateTime = LocalDateTime.now();  
-        String randomText = UUID.randomUUID().toString();  
-        WebInfoDTO webInfoDTO = WebInfoDTO.builder().regDate(dateTime).modDate(dateTime).title(randomText + "_title").content(randomText + "content").comment(randomText + "_comment").build();  
-        return webInfoDTO;  
-    }  
+    public int createRandomNumber() {
+        Random random = new Random();
+        return random.nextInt(1000);
+    }
   
-    public WebInfoDTO createWebInfoDTO(int parentId) {  
-        LocalDateTime now = LocalDateTime.now();  
-        String randomText = UUID.randomUUID().toString();  
-        WebInfoDTO webInfoDTO = WebInfoDTO.builder().regDate(now).modDate(now).title(randomText+"_title").content(randomText+"_content").comment(randomText+"comment").parentId(parentId).build();  
-        return webInfoDTO;  
-    }  
+    public LocalDateTime createRandomDatetime() {
+        LocalDateTime now = LocalDateTime.now();
+        return now;
+    }
   
-    private WebInfoDTO getTargetDTO() {  
-        WebInfoDTO webInfoDTO = createWebInfoDTO();  
-        webInfoService.register(webInfoDTO);  
-        WebInfoDTO target = webInfoService.getLast();  
-        return target;  
-    }  
+    public LocalDate createRandomDate() {
+        LocalDate now = LocalDate.now();
+        return now;
+    }
   
-    public List<WebInfoDTO> getTargetDTO(int parentId) {  
-        for (int i=0; i<5; i++) {  
-            WebInfoDTO webInfoDTO = createWebInfoDTO(parentId);  
-            webInfoService.register(webInfoDTO);  
-        }  
-        List<WebInfoDTO> webInfoDTOList = webInfoService.getAll();  
-        List<WebInfoDTO> targetDTO = webInfoDTOList.subList(webInfoDTOList.size()-5, webInfoDTOList.size());  
-        return targetDTO;  
-    }  
   
-    private List<WebInfoDTO> getTargetDTOList(int size) {  
-        List<WebInfoDTO> targetDTOList = new ArrayList<>();  
-        for (int i = 0; i < size; i++) {  
-            WebInfoDTO webInfoDTO = createWebInfoDTO();  
-            webInfoService.register(webInfoDTO);  
-            WebInfoDTO targetDTO = webInfoService.getLast();  
-            targetDTOList.add(targetDTO);  
-        }  
-        return targetDTOList;  
+    @Test  
+    public void registerTest() {
+        int result = service.register(createDTO());
+        Assertions.assertEquals(result,1);
     }  
   
     @Test  
-    public void registerTest() {  
-        WebInfoDTO webInfoDTO = createWebInfoDTO();  
-        webInfoService.register(webInfoDTO);  
+    public void selectLastTest() {  
+        service.register(createDTO());  
+        System.out.println(service.getLast());  
     }  
   
     @Test  
-    public void getLastTest() {  
-        WebInfoDTO target = createWebInfoDTO();  
-        webInfoService.register(target);  
-        WebInfoDTO test = webInfoService.getLast();  
-        Assertions.assertEquals(target.getTitle(), test.getTitle());  
+    public void selectAllTest () {
+        service.register(createDTO());
+        service.register(createDTO());
+        System.out.println(service.getAll());
+    }
+  
+    @Test  
+    public void selectByIdTest () {
+        service.register(createDTO());
+//      id 속성 이름 확인 필요
+        Assertions.assertEquals(service.getLast().getMbId(), service.getByMbId(service.getLast().getMbId()).getMbId());
+    }
+  
+    @Test  
+    public void deleteTest() {
+        service.register(createDTO());
+        int result = service.remove(service.getLast().getMbId());
+        Assertions.assertEquals(result,1);
     }  
   
     @Test  
-    public void getAllTest() {  
-        int size = 10;  
-        List<WebInfoDTO> target = getTargetDTOList(size);  
-        List<WebInfoDTO> test = webInfoService.getAll();  
-        Assertions.assertEquals(target.get(size - 1).getTitle(), test.get(test.size() - 1).getTitle());  
-        Assertions.assertEquals(target.get(size - 3).getTitle(), test.get(test.size() - 3).getTitle());  
-    }  
-  
-    @Test  
-    public void getByIdTest() {  
-        WebInfoDTO target = getTargetDTO();  
-        WebInfoDTO test = webInfoService.getById(target.getId());  
-        Assertions.assertEquals(target.getTitle(), test.getTitle());  
-    }  
-  
-    @Test  
-    public void getByParentIdTest() {  
-        Random random = new Random();  
-        int parentId = random.nextInt(1000);  
-        List<WebInfoDTO> target = getTargetDTO(parentId);  
-        List<WebInfoDTO> test = webInfoService.getByParentId(parentId);  
-        Assertions.assertEquals(target.get(0).getTitle(), test.get(0).getTitle());  
-    }  
-  
-    @Test  
-    public void removeTest() {  
-        WebInfoDTO target = getTargetDTO();  
-        webInfoService.remove(target.getId());  
-        WebInfoDTO test = webInfoService.getById(target.getId());  
-        Assertions.assertNull(test);  
-    }  
-  
-    @Test  
-    public void modifyTest(){  
-        WebInfoDTO target = getTargetDTO();  
-        String modified = UUID.randomUUID()+"modified";  
-        target.setTitle(modified);  
-        webInfoService.modify(target);  
-        WebInfoDTO test = webInfoService.getById(target.getId());  
-        Assertions.assertEquals(target.getTitle(), test.getTitle());  
+    public void updateTest(){
+        service.register(createDTO());
+//      수정하고자 하는 속성 이름과 해당 객체 확인 필요
+        String input = service.getLast().getMbUserId();
+        MemberDTO dto = service.getLast();
+        dto.setMbUserId(createRandomString());
+        service.modify(dto);
+        Assertions.assertNotEquals(input, service.getLast().getMbUserId());
     }  
 }
 ~~~

@@ -29,23 +29,23 @@ dependencies {
 
 - application.properies
 ~~~
-spring.application.name=webDevSys  
+spring.application.name=webDevSys
+
+#/repository
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+spring.datasource.url=jdbc:mariadb://localhost:3306/webdb
+spring.datasource.username=webuser
+spring.datasource.password=webuser
   
-#/repository  
-spring.datasource.driver-class-name=org.mariadb.jdbc.Driver  
-spring.datasource.url=jdbc:mariadb://localhost:3306/webdb  
-spring.datasource.username=webuser  
-spring.datasource.password=webuser  
+# log
+logging.level.org.springframework=info
+logging.level.org.hgtech=info
   
-# log  
-logging.level.org.springframework=info  
-logging.level.org.hgtech=info  
+# file
+spring.servlet.multipart.max-file-size=1000MB
+spring.servlet.multipart.max-request-size=1000MB
   
-# file  
-spring.servlet.multipart.max-file-size=1000MB  
-spring.servlet.multipart.max-request-size=1000MB  
-  
-# mybatis  
+# mybatis
 mybatis.mapper-locations=classpath:mappers/*.xml
 ~~~
 
@@ -55,9 +55,12 @@ mybatis.mapper-locations=classpath:mappers/*.xml
 	|-main
 		|-java
 			|-org.hgtect.webdevsys
+				|-config
 				|-controller
+				|-converter
 				|-domain
 				|-DTO
+				|-filter
 				|-reposipory
 				|-service
 				|-WebDevSysApplication

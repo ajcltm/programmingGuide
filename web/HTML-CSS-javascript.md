@@ -30,21 +30,25 @@
 </head>
 ~~~
 
+~~~css
+* {
+	font-family: "Noto Sans KR", serif;
+}
+
+~~~
+
 - Font-Awesome link
 ~~~html
 <head>
-	<link
-	    rel="stylesheet"
-	    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
-	/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 ~~~
 
 ~~~css
 p::after { 
 content:'\f002'; /*유니코드 붙여넣기*/
-font-family:"Font Awesome 5 Free"; /*폰트어썸 fas, far 글꼴 연결*/ 
-font-weight:600; /*폰트어썸 굵기 Solid → 900, Regular, Brands → 400, Light → 300*/ 
+font-family:"Font Awesome 6 Free"; /*폰트어썸 fas, far 글꼴 연결*/ 
+font-weight:900; /*폰트어썸 굵기(주로 무료버전은 Solid) Solid → 900, Regular, Brands → 400, Light → 300*/ 
 }
 ~~~
 
@@ -57,6 +61,23 @@ font-weight:600; /*폰트어썸 굵기 Solid → 900, Regular, Brands → 400, L
     box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
     border-collapse : collapse;
+}
+
+a {
+    color: black;
+}
+  
+li {
+    list-style: none; /* 기본 스타일 제거 */}
+  
+input {
+    min-width: 0;
+    box-sizing: border-box;
+}
+  
+button {  
+    background-color: transparent;  
+    border: none;  
 }
 ~~~
 
@@ -1194,6 +1215,7 @@ a.bl_card:hover .bl_card_txt {
 
 ### dropdown memu
 ---
+- css only
 ~~~html
 <!-- html -->
 <div className="dropdown">
@@ -1250,6 +1272,127 @@ a.bl_card:hover .bl_card_txt {
     pointer-events: auto;
 }
 ~~~
+
+- css + javacript
+~~~html
+<ul class="bl_nav">
+	<li class="bl_nav_item">
+		<a class="bl_nav_item_txt">Company</a>
+		<ul class="bl_nav_sub_box">
+			<li class="bl_nav_sub_item">
+				<a class="bl_nav_sub_item_txt">회사소개</a>
+				<a class="bl_nav_sub_item_txt">언론보도</a>
+				<a class="bl_nav_sub_item_txt">블로그</a>
+			</li>
+		</ul>
+	</li>
+	<li class="bl_nav_item">
+		<a class="bl_nav_item_txt">Solutions</a
+		<ul class="bl_nav_sub_box">
+			<li class="bl_nav_sub_item">
+				<a class="bl_nav_sub_item_txt">Unified-IAM</a>
+				<a class="bl_nav_sub_item_txt">Cloud</a>
+				<a class="bl_nav_sub_item_txt">Zero-trust</a>
+				<a class="bl_nav_sub_item_txt">No-SQL</a>
+			</li>
+		</ul>
+	</li>
+	<li class="bl_nav_item">
+		<a class="bl_nav_item_txt">Products</a>
+		<ul class="bl_nav_sub_box">
+			<li class="bl_nav_sub_item">
+				<a class="bl_nav_sub_item_txt">DBSAFER-DB</a>
+				<a class="bl_nav_sub_item_txt">DBSAFER-AM</a>
+				<a class="bl_nav_sub_item_txt">DBSAFER-OS</a>
+				<a class="bl_nav_sub_item_txt">DBSAFER-AM</a>
+				<a class="bl_nav_sub_item_txt">INFOSAFER</a>
+			</li>
+		</ul>
+	</li>
+</ul>
+~~~
+
+~~~css
+/* ============ bl_nav ======================== */
+
+.bl_nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bl_nav > * {
+    margin-right: 2rem;
+}
+
+
+.bl_nav > *:last-child {
+    margin-right: 0;
+}
+
+.bl_nav_item {
+    position: relative;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.bl_nav_item:hover {
+    color: rgba(var(--sub-color,1));
+}
+
+.bl_nav_sub_box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: max-content;
+    padding: .5rem 0;
+    background-color: rgba(var(--secondary-color), 1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 3rem 0 rgba(0,0,0,.2);
+    color: rgba(var(--primary-color), 1);
+    z-index: 10;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transform: translateY(-20%);
+    transition: all ease .5s;
+}
+
+  
+.bl_nav_sub_box.active{
+    opacity: 100;
+    height: max-content;
+    transform: translateY(0);
+}
+
+.bl_nav_sub_item_txt {
+    display: block;
+    cursor: pointer;
+    padding: .5rem 1.5rem;
+    text-align: center;
+}
+
+.bl_nav_sub_item_txt:hover {
+    background-color: rgba(var(--primary-color),.2);
+}
+~~~
+
+~~~javascript
+const bl_nav = document.querySelector(".bl_nav");
+
+bl_nav.addEventListener("mouseover", (e)=>{
+    const bl_nav_item = e.target.closest(".bl_nav_item");
+    const bl_nav_sub_item = bl_nav_item.querySelector(".bl_nav_sub_box");
+    bl_nav_sub_item.classList.add("active");
+})
+
+bl_nav.addEventListener("mouseout", (e)=>{
+    const bl_nav_item = e.target.closest(".bl_nav_item");
+    const bl_nav_sub_item = bl_nav_item.querySelector(".bl_nav_sub_box");
+    bl_nav_sub_item.classList.remove("active");
+})
+~~~
+
 ### login form
 ---
 ~~~html
@@ -1463,30 +1606,49 @@ window.onclick = function(event) {
 
 - css
 ~~~css
+/* ========== bl_slider ================ */
+
 .bl_slider {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .bl_slider_mvleft {
     position: absolute;
     top: 50%;
-    left: 5%;
-    width: 20px;
-    height: 20px;
+    left: 2%;
+    border: solid 1px white;
+    font-size: 2rem;
+    color: white;
     transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    line-height: 2.5rem;
+    text-align: center;
+    border-radius: 50%;
     z-index: 2;
+    opacity: .5;
+    cursor: pointer;
 }
 
 .bl_slider_mvright {
     position: absolute;
     top: 50%;
-    width: 20px;
-    height: 20px;
-    right: 5%;
+    right: 2%;
+    border: solid 1px white;
+    font-size: 2rem;
+    color: white;
     transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    line-height: 2.5rem;
+    text-align: center;
+    border-radius: 50%;
     z-index: 2;
+    opacity: .5;
+    cursor: pointer;
 }
 
 .bl_slider_track {
@@ -1495,20 +1657,18 @@ window.onclick = function(event) {
 }
 
 .bl_slider_track > * {
-    flex: 0 0 300px;
+    flex: 0 0 100%;
 }
 ~~~
 
 - javascript
 ~~~javascript
 const track = document.querySelector('.bl_slider_track');
-const slides = document.querySelectorAll('.bl_slider_item');
+const slides = document.querySelectorAll('.bl_slider_item')
 const prevButton = document.querySelector('.bl_slider_mvleft');
-console.log(prevButton);
 const nextButton = document.querySelector('.bl_slider_mvright');
-console.log(nextButton);
-
 const slideCount = slides.length;
+
 let currentIndex = 0;
 
 // 클론 슬라이드 추가
@@ -1516,46 +1676,169 @@ const firstClone = slides[0].cloneNode(true);
 const lastClone = slides[slideCount - 1].cloneNode(true);
 track.appendChild(firstClone); // 맨 뒤에 첫 슬라이드 복사
 track.insertBefore(lastClone, slides[0]); // 맨 앞에 마지막 슬라이드 복사
-
 // 초기 위치 설정
 const slideWidth = slides[0].offsetWidth;
 track.style.transform = `translateX(-${slideWidth}px)`;
 
 function moveToSlide(index) {
-    track.style.transition = 'transform 0.5s ease';
-    track.style.transform = `translateX(-${(index + 1) * slideWidth}px)`;
-    currentIndex = index;
+    track.style.transition = 'transform 0.5s ease';
+    track.style.transform = `translateX(-${(index + 1) * slideWidth}px)`;
+    currentIndex = index;
 
-    // 무한 루프 처리
-    track.addEventListener('transitionend', () => {
-    if (currentIndex === slideCount) {
-        track.style.transition = 'none';
-        track.style.transform = `translateX(-${slideWidth}px)`;
-        currentIndex = 0;
-    }
-    if (currentIndex === -1) {
-        track.style.transition = 'none';
-        track.style.transform = `translateX(-${slideCount * slideWidth}px)`;
-        currentIndex = slideCount - 1;
-    }
-    });
+    // 무한 루프 처리
+    track.addEventListener('transitionend', () => {
+    if (currentIndex === slideCount) {
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${slideWidth}px)`;
+        currentIndex = 0;
+    }
+    if (currentIndex === -1) {
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${slideCount * slideWidth}px)`;
+        currentIndex = slideCount - 1;
+    }
+    });
 }
 
 function addEventListner_mvbtn() {
-    prevButton.addEventListener('click', () => {
-        console.log("click mvleft")
-        if (currentIndex > -1) {
-        moveToSlide(currentIndex - 1);
-        }
-    });
+    prevButton.addEventListener('click', () => {
+        console.log("click mvleft")
+        if (currentIndex > -1) {
+        moveToSlide(currentIndex - 1);
+        }
+    });
 
-    // 버튼 이벤트 핸들러
-    nextButton.addEventListener('click', () => {
-        if (currentIndex < slideCount) {
-        moveToSlide(currentIndex + 1);
-        }
-    });
+    // 버튼 이벤트 핸들러
+    nextButton.addEventListener('click', () => {
+        if (currentIndex < slideCount) {
+        moveToSlide(currentIndex + 1);
+        }
+    });
 }
 
 addEventListner_mvbtn();
+
+// 자동으로 슬라이더 넘길 경우
+setInterval(() => {
+    moveToSlide(currentIndex+1);
+}, 5000);
+~~~
+
+### One Page Scroll Effect
+---
+~~~html
+<div class="ly_main">
+	<div class="ly_main_section hp_vh100">
+	</div>
+	<div class="ly_main_section hp_vh100">
+	</div>
+	<div class="ly_main_section hp_vh100">
+	</div>
+</div>
+~~~
+
+~~~javascript
+const pages = document.querySelectorAll('.ly_main_section');
+let currentPage = 0;
+
+window.addEventListener('wheel', (event) => {
+    event.preventDefault(); // 기본 스크롤 방지
+    if (event.deltaY > 0) {
+        // 아래로 스크롤
+        currentPage = Math.min(currentPage + 1, pages.length - 1);
+    } else {
+        // 위로 스크롤
+        currentPage = Math.max(currentPage - 1, 0);
+    }
+    pages[currentPage].scrollIntoView({ behavior: 'smooth' });
+});
+~~~
+
+### View Scroll Effect
+---
+~~~css
+/* ========= animation ========== */
+@keyframes appear {
+    from {
+        opacity: 0;
+        scale: .5;
+    }
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+.bl_txt_card {
+    animation: appear linear;
+    animation-timeline: view();
+    animation-range: entry 0;
+}
+~~~
+
+### Header Vislble Scroll Effect
+---
+~~~html
+<header class="ly_header">
+</header>
+~~~
+
+~~~css
+.ly_header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 9vh;
+    padding: .5rem 0;
+    background-color: rgba(var(--secondary-color), 1);
+    box-shadow: .1rem .1rem 1rem 0 rgba(0,0,0,.4);
+    transform: translateY(-300%);
+    transition: all ease .5s;
+    z-index: 10;
+}
+
+.hp_translateY0 {
+    transform: translateY(0);
+}
+~~~
+
+~~~javascript
+const header = document.querySelector('.ly_header');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 10) {
+    // 스크롤이 10px 이상이면 헤더를 표시
+    header.classList.add('hp_translateY0');
+  } else {
+    // 스크롤이 맨 위로 올라가면 헤더를 숨김
+    header.classList.remove('hp_translateY0');
+  }
+});
+~~~
+
+### File List
+---
+~~~javascript
+const fileInput = document.querySelector('input.fileInput');  
+const fileList = document.querySelector('.fileList');  
+
+fileInput.addEventListener('change', () => {  
+	// 기존 목록 초기화  
+	fileList.innerHTML = '';  
+
+	// 첨부된 파일 목록 가져오기  
+	const files = fileInput.files;  
+
+	// 파일 목록을 표시  
+	Array.from(files).forEach((file) => {  
+		const listItem = document.createElement('span');  
+
+		// 파일 이름 제한: 10글자 + '...'            const truncatedName = file.name.length > 10  
+			? file.name.slice(0, 10) + '...'  
+			: file.name;  
+
+		listItem.textContent = `${truncatedName} (${(file.size / 1024).toFixed(2)} KB)  `;  
+		fileList.appendChild(listItem);  
+	});  
+});
 ~~~

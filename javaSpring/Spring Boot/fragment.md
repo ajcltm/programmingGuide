@@ -65,7 +65,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class FragmentController {
 
-    @GetMapping("/header")
+    @GetMapping("/webinfo/list")
     public String getHeaderFragment(Model model) {
         model.addAttribute("title", "Dynamic Title");
         return "fragmentFileName :: fragmentId"; // fragmentFileName.html 파일의 fragmentId fragment 반환
