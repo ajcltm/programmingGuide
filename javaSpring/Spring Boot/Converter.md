@@ -13,7 +13,9 @@
      |-CustomConverter
 ~~~
 
-- converter
+### converter 구현
+---
+
 ~~~java
 // Spring의 `Converter<S, T>` 인터페이스는 소스 타입(S)을 타겟 타입(T)으로 변환하는 역할
 public interface Converter<S, T> {
@@ -44,7 +46,9 @@ public class StringToLocalDateTimeConverter implements Converter<String, LocalDa
 }
 ~~~
 
-- webconfig
+### webconfig 등록 설정
+---
+- @component 이노테이션을 달면 별도로 등록하지 않아도 됨(자동등록)
 ~~~java
 package org.hgtech.worksystem.config;  
   
