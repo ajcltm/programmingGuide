@@ -1,23 +1,23 @@
 
 - repository
 ~~~java
-package org.hgtech.board.repository;  
+package org.hgtech.pnpsecure.repository;  
   
 import org.apache.ibatis.annotations.Mapper;  
-import org.hgtech.board.domain.MemberVO;  
+import org.hgtech.pnpsecure.domain.BoardVO;  
   
 import java.util.List;  
   
 @Mapper  
-public interface MemberRepository {  
-    int insert(MemberVO memberVO);  
-    List<MemberVO> selectAll();  
-    MemberVO selectLast();  
-    MemberVO selectByMbId(String mbId);  
-    MemberVO selectByIdpw(String mbUserId, String mbUserPw);  
-    MemberVO selectByMbUUID(String mbUUID);  
-    int delete(String mbId);  
-    int update(MemberVO memberVO);  
+public interface BoardRepository {  
+    int insert(BoardVO boardVO);  
+    List<BoardVO> selectAll();  
+    BoardVO selectLast();  
+    BoardVO selectById(String id);  
+    BoardVO selectByCategory(String category);  
+    BoardVO selectLike(String keyword);  
+    int delete(String id);  
+    int update(BoardVO boardVO);  
 }
 ~~~
 
@@ -25,46 +25,46 @@ public interface MemberRepository {
 ~~~xml
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
-<mapper namespace="org.hgtech.board.repository.MemberRepository">  
+<mapper namespace="org.hgtech.pnpsecure.repository.BoardRepository">  
     <insert id="insert">  
-        insert into tbl_boardMember (mbId, mbRegDate, mbModDate, mbName, mbBirth, mbUserId, mbUserPw, mbUUID) values (#{mbId}, #{mbRegDate}, #{mbModDate}, #{mbName}, #{mbBirth}, #{mbUserId}, #{mbUserPw}, #{mbUUID})  
+        insert into tbl_pnpsecure_board (id, regDate, modDate, title, content, category) values (#{id}, #{regDate}, #{modDate}, #{title}, #{content}, #{category})  
     </insert>  
   
-    <select id="selectAll" resultType="org.hgtech.board.domain.MemberVO">  
-        select * from tbl_boardMember  
+    <select id="selectAll" resultType="org.hgtech.pnpsecure.domain.BoardVO">  
+        select * from tbl_pnpsecure_board  
     </select>  
   
-    <select id="selectByMbId" resultType="org.hgtech.board.domain.MemberVO">  
-        select * from tbl_boardMember where mbId = #{mbId}  
+    <select id="selectById" resultType="org.hgtech.pnpsecure.domain.BoardVO">  
+        select * from tbl_pnpsecure_board where id = #{id}  
     </select>  
   
-    <select id="selectByIdpw" resultType="org.hgtech.board.domain.MemberVO">  
-        select * from tbl_boardMember where mbUserId = #{mbUserId} and mbUserPw = #{mbUserPw}  
+    <select id="selectByCategory" resultType="org.hgtech.pnpsecure.domain.BoardVO">  
+        select * from tbl_pnpsecure_board where category = #{category}  
     </select>  
   
-    <select id="selectByMbUUID" resultType="org.hgtech.board.domain.MemberVO">  
-        select * from tbl_boardMember where mbUUID = #{mbUUID}  
+    <select id="selectLike" resultType="org.hgtech.pnpsecure.domain.BoardVO">  
+        select * from tbl_pnpsecure_board where title like concat('%', #{keyword}, '%') or content like concat('%', #{keyword}, '%')  
     </select>  
   
-    <select id="selectLast" resultType="org.hgtech.board.domain.MemberVO">  
-        select * from tbl_boardMember order by mbId desc limit 1  
+    <select id="selectLast" resultType="org.hgtech.pnpsecure.domain.BoardVO">  
+        select * from tbl_pnpsecure_board order by id desc limit 1  
     </select>  
   
     <delete id="delete">  
-        delete from tbl_boardMember where mbId = #{mbId}  
+        delete from tbl_pnpsecure_board where id = #{id}  
     </delete>  
   
     <update id="update">  
-        update tbl_boardMember set mbRegDate = #{mbRegDate}, mbModDate = #{mbModDate}, mbName = #{mbName}, mbBirth = #{mbBirth}, mbUserId = #{mbUserId}, mbUserPw = #{mbUserPw}, mbUUID = #{mbUUID} where mbId= #{mbId}  
+        update tbl_pnpsecure_board set regDate = #{regDate}, modDate = #{modDate}, title = #{title}, content = #{content}, category = #{category} where id = #{id}  
     </update>  
 </mapper>
 ~~~
 
 - test
 ~~~java
-package org.hgtech.board.repository;  
+package org.hgtech.pnpsecure.repository;  
   
-import org.hgtech.board.domain.MemberVO;  
+import org.hgtech.pnpsecure.domain.BoardVO;  
 import org.junit.jupiter.api.Assertions;  
 import org.junit.jupiter.api.Test;  
 import org.springframework.beans.factory.annotation.Autowired;  
@@ -76,21 +76,20 @@ import java.util.Random;
 import java.util.UUID;  
   
 @SpringBootTest  
-public class memberRepositoryTest {  
-    @Autowired  
-    MemberRepository repository;  
+public class BoardRepositoryTest {  
   
-    public MemberVO createVO() {  
+    @Autowired  
+    BoardRepository repository;  
+  
+    public BoardVO createVO() {  
 //      VO 객체 생성  
-        MemberVO vo = MemberVO.builder()  
-                .mbId(createId())  
-                .mbRegDate(createRandomDate())  
-                .mbModDate(createRandomDate())  
-                .mbName(createRandomString())  
-                .mbBirth(createRandomDate())  
-                .mbUserId(createRandomString())  
-                .mbUserPw(createRandomString())  
-                .mbUUID(createRandomString())  
+        BoardVO vo = BoardVO.builder()  
+                .id(createId())  
+                .regDate(createRandomDatetime())  
+                .modDate(createRandomDatetime())  
+                .title(createRandomString())  
+                .content(createRandomString())  
+                .category(createRandomString())  
                 .build();  
         return vo;  
     }  
@@ -98,9 +97,9 @@ public class memberRepositoryTest {
     public String createId() {  
         int newNum = 10000;  
         if (repository.selectLast() != null) {  
-            newNum = Integer.parseInt(repository.selectLast().getMbId().substring(3))+1 ;  
+            newNum = Integer.parseInt(repository.selectLast().getId().substring(3))+1 ;  
         }  
-        return "mb-"+newNum;  
+        return "bd-"+newNum;  
     }  
     public String createRandomString() {  
         return UUID.randomUUID().toString();  
@@ -130,7 +129,8 @@ public class memberRepositoryTest {
   
     @Test  
     public void selectLastTest() {  
-        repository.insert(createVO());  
+        int result = repository.insert(createVO());  
+        System.out.println("================== selectLastTest ====================");  
         System.out.println(repository.selectLast());  
     }  
   
@@ -138,6 +138,7 @@ public class memberRepositoryTest {
     public void selectAllTest () {  
         repository.insert(createVO());  
         repository.insert(createVO());  
+        System.out.println("================== selectAllTest ====================");  
         System.out.println(repository.selectAll());  
     }  
   
@@ -145,27 +146,30 @@ public class memberRepositoryTest {
     public void selectByIdTest () {  
         repository.insert(createVO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(repository.selectLast().getMbId(), repository.selectByMbId(repository.selectLast().getMbId()).getMbId());  
+        System.out.println("================== selectByIdTest ====================");  
+        System.out.println(repository.selectById(repository.selectLast().getId()));  
     }  
   
     @Test  
-    public void selectByIdpwTest () {  
+    public void selectByCategoryTest() {  
         repository.insert(createVO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(repository.selectLast().getMbId(), repository.selectByIdpw(repository.selectLast().getMbUserId(), repository.selectLast().getMbUserPw()).getMbId());  
+        System.out.println("================== selectByCategoryTest ====================");  
+        System.out.println(repository.selectByCategory(repository.selectLast().getCategory()));  
     }  
   
     @Test  
-    public void selectByUUID () {  
+    public void selectLikeTest() {  
         repository.insert(createVO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(repository.selectLast().getMbId(), repository.selectByMbUUID(repository.selectLast().getMbUUID()).getMbId());  
+        System.out.println("================== selectLikeTest ====================");  
+        System.out.println(repository.selectLike(repository.selectLast().getTitle()));  
     }  
   
     @Test  
     public void deleteTest() {  
         repository.insert(createVO());  
-        int result = repository.delete(repository.selectLast().getMbId());  
+        int result = repository.delete(repository.selectLast().getId());  
         Assertions.assertEquals(result,1);  
     }  
   
@@ -173,11 +177,12 @@ public class memberRepositoryTest {
     public void updateTest(){  
         repository.insert(createVO());  
 //      수정하고자 하는 속성 이름과 해당 객체 확인 필요  
-        String input = repository.selectLast().getMbUserId();  
-        MemberVO vo = repository.selectLast();  
-        vo.setMbUserId(createRandomString());  
-        repository.update(vo);  
-        Assertions.assertNotEquals(input, repository.selectLast().getMbUserId());  
+        BoardVO updatedVO = repository.selectLast();  
+        updatedVO.setContent(createRandomString()+"  ### updated!!! ###  ");  
+        int result = repository.update(updatedVO);  
+        Assertions.assertEquals(result,1);  
+        System.out.println("================== updateTest ====================");  
+        System.out.println(repository.selectLast());  
     }  
 }
 ~~~

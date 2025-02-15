@@ -1,10 +1,10 @@
 - service
 ~~~java
-package org.hgtech.board.service;  
+package org.hgtech.pnpsecure.service;  
   
-import org.hgtech.board.DTO.MemberDTO;  
-import org.hgtech.board.domain.MemberVO;  
-import org.hgtech.board.repository.MemberRepository;  
+import org.hgtech.pnpsecure.DTO.BoardDTO;  
+import org.hgtech.pnpsecure.domain.BoardVO;  
+import org.hgtech.pnpsecure.repository.BoardRepository;  
 import org.modelmapper.ModelMapper;  
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Service;  
@@ -15,59 +15,58 @@ import java.util.List;
 import java.util.stream.Collectors;  
   
 @Service  
-public class MemberService {  
-  
+public class BoardService {  
     @Autowired  
-    MemberRepository repository;  
+    BoardRepository repository;  
   
     ModelMapper mapper = new ModelMapper();  
   
     public String createId() {  
         int newNum = 10000;  
         if (getLast() != null) {  
-            newNum = Integer.parseInt(getLast().getMbId().substring(3))+1 ;  
+            newNum = Integer.parseInt(getLast().getId().substring(3))+1 ;  
         }  
         return "mb-"+newNum;  
     }  
   
-    public int register(MemberDTO memberDTO) {  
-        memberDTO.setMbId(createId());  
-        memberDTO.setMbRegDate(LocalDate.now());  
-        memberDTO.setMbModDate(LocalDate.now());  
-        return repository.insert(mapper.map(memberDTO, MemberVO.class));  
+    public int register(BoardDTO boardDTO) {  
+        boardDTO.setId(createId());  
+        boardDTO.setRegDate(LocalDateTime.now());  
+        boardDTO.setModDate(LocalDateTime.now());  
+        return repository.insert(mapper.map(boardDTO, BoardVO.class));  
     }  
   
-    public MemberDTO getLast() {  
+    public BoardDTO getLast() {  
         if (repository.selectLast() != null) {  
-            return mapper.map(repository.selectLast(), MemberDTO.class);  
+            return mapper.map(repository.selectLast(), BoardDTO.class);  
         }  
         return null;  
     }  
   
-    public List<MemberDTO> getAll() {  
+    public List<BoardDTO> getAll() {  
         if (repository.selectAll() != null) {  
-            return repository.selectAll().stream().map(vo -> mapper.map(vo, MemberDTO.class)).collect(Collectors.toList());  
+            return repository.selectAll().stream().map(vo -> mapper.map(vo, BoardDTO.class)).collect(Collectors.toList());  
         }  
         return null;  
     }  
   
-    public MemberDTO getByMbId(String id) {  
-        if (repository.selectByMbId(id) != null) {  
-            return mapper.map(repository.selectByMbId(id), MemberDTO.class);  
+    public BoardDTO getById(String id) {  
+        if (repository.selectById(id) != null) {  
+            return mapper.map(repository.selectById(id), BoardDTO.class);  
         }  
         return null;  
     }  
   
-    public MemberDTO getByIdpw(String mbUserId, String mbUserPw) {  
-        if (repository.selectByIdpw(mbUserId, mbUserPw) != null) {  
-            return mapper.map(repository.selectByIdpw(mbUserId, mbUserPw), MemberDTO.class);  
+    public BoardDTO getByCategory(String category) {  
+        if (repository.selectByCategory(category) != null) {  
+            return mapper.map(repository.selectByCategory(category), BoardDTO.class);  
         }  
         return null;  
     }  
   
-    public MemberDTO getByMbUUID(String mbUUID) {  
-        if (repository.selectByMbUUID(mbUUID) != null) {  
-            return mapper.map(repository.selectByMbUUID(mbUUID), MemberDTO.class);  
+    public BoardDTO getLike(String keyword) {  
+        if (repository.selectLike(keyword) != null) {  
+            return mapper.map(repository.selectLike(keyword), BoardDTO.class);  
         }  
         return null;  
     }  
@@ -76,18 +75,19 @@ public class MemberService {
         return repository.delete(id);  
     }  
   
-    public int modify(MemberDTO memberDTO) {  
-        memberDTO.setMbModDate(LocalDate.now());  
-        return repository.update(mapper.map(memberDTO, MemberVO.class));  
+    public int modify(BoardDTO boardDTO) {  
+        boardDTO.setModDate(LocalDateTime.now());  
+        return repository.update(mapper.map(boardDTO, BoardVO.class));  
     }  
 }
 ~~~
 
 - test
 ~~~java
-package org.hgtech.board.service;  
+package org.hgtech.pnpsecure.service;  
   
-import org.hgtech.board.DTO.MemberDTO;  
+import org.hgtech.pnpsecure.DTO.BoardDTO;  
+import org.hgtech.pnpsecure.domain.BoardVO;  
 import org.junit.jupiter.api.Assertions;  
 import org.junit.jupiter.api.Test;  
 import org.springframework.beans.factory.annotation.Autowired;  
@@ -99,21 +99,19 @@ import java.util.UUID;
 import org.springframework.boot.test.context.SpringBootTest;  
   
 @SpringBootTest  
-public class MemberServiceTest {  
+public class BoardServiceTest {  
     @Autowired  
-    MemberService service;  
+    BoardService service;  
   
-    public MemberDTO createDTO() {  
+    public BoardDTO createDTO() {  
 //      VO 객체 생성  
-        MemberDTO dto = MemberDTO.builder()  
-                .mbId(createRandomString())  
-                .mbRegDate(createRandomDate())  
-                .mbModDate(createRandomDate())  
-                .mbName(createRandomString())  
-                .mbBirth(createRandomDate())  
-                .mbUserId(createRandomString())  
-                .mbUserPw(createRandomString())  
-                .mbUUID(createRandomString())  
+        BoardDTO dto = BoardDTO.builder()  
+                .id(createRandomString())  
+                .regDate(createRandomDatetime())  
+                .modDate(createRandomDatetime())  
+                .title(createRandomString())  
+                .content(createRandomString())  
+                .category(createRandomString())  
                 .build();  
         return dto;  
     }  
@@ -145,55 +143,61 @@ public class MemberServiceTest {
     }  
   
     @Test  
-    public void selectLastTest() {  
+    public void getLastTest() {  
         service.register(createDTO());  
+        System.out.println("================== getLastTest ====================");  
         System.out.println(service.getLast());  
     }  
   
     @Test  
-    public void selectAllTest () {  
+    public void getAllTest () {  
         service.register(createDTO());  
         service.register(createDTO());  
+        System.out.println("================== getAllTest ====================");  
         System.out.println(service.getAll());  
     }  
   
     @Test  
-    public void selectByIdTest () {  
+    public void getByIdTest () {  
         service.register(createDTO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(service.getLast().getMbId(), service.getByMbId(service.getLast().getMbId()).getMbId());  
+        System.out.println("================== getByIdTest ====================");  
+        System.out.println(service.getById(service.getLast().getId()));  
     }  
   
     @Test  
-    public void getByMbIdpwTest () {  
+    public void getByCategoryTest () {  
         service.register(createDTO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(service.getLast().getMbId(), service.getByIdpw(service.getLast().getMbUserId(), service.getLast().getMbUserPw()).getMbId());  
+        System.out.println("================== getByCategoryTest ====================");  
+        System.out.println(service.getByCategory(service.getLast().getCategory()));  
     }  
   
     @Test  
-    public void getByUUIDTest () {  
+    public void getLikeTest () {  
         service.register(createDTO());  
 //      id 속성 이름 확인 필요  
-        Assertions.assertEquals(service.getLast().getMbId(), service.getByMbUUID(service.getLast().getMbUUID()).getMbId());  
+        System.out.println("================== getLikeTest ====================");  
+        System.out.println(service.getLike(service.getLast().getTitle()));  
     }  
   
     @Test  
-    public void deleteTest() {  
+    public void removeTest() {  
         service.register(createDTO());  
-        int result = service.remove(service.getLast().getMbId());  
+        int result = service.remove(service.getLast().getId());  
         Assertions.assertEquals(result,1);  
     }  
   
     @Test  
-    public void updateTest(){  
+    public void modifyTest(){  
         service.register(createDTO());  
 //      수정하고자 하는 속성 이름과 해당 객체 확인 필요  
-        String input = service.getLast().getMbUserId();  
-        MemberDTO dto = service.getLast();  
-        dto.setMbUserId(createRandomString());  
-        service.modify(dto);  
-        Assertions.assertNotEquals(input, service.getLast().getMbUserId());  
+        BoardDTO updatedDTO = service.getLast();  
+        updatedDTO.setContent(createRandomString()+"  ### modified!!! ###  ");  
+        int result = service.modify(updatedDTO);  
+        Assertions.assertEquals(result,1);  
+        System.out.println("================== modifyTest ====================");  
+        System.out.println(service.getLast());  
     }  
 }
 ~~~
