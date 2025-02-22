@@ -201,3 +201,48 @@ public class BoardPaginationTest {
     }  
 }
 ~~~
+
+### 화면 표기
+---
+~~~html
+<!DOCTYPE html>  
+<html xmlns:th="http://www.thymeleaf.org">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>Title</title>  
+</head>  
+<body>  
+    <div class="bl_board" th:fragment="boardList">  
+        <div class="bl_boardList">  
+            <table class="bl_boardList_table">  
+                <thead class="bl_boardList_table_header">  
+                    <tr>                        
+	                    <th class="bl_boardList_table_regDate">등록 일자</th>  
+                        <th class="bl_boardList_table_title">제목</th>  
+                    </tr>                
+				</thead>                
+				<tbody>                    
+					<tr th:each="item : ${boardList.dataList}" >  
+                        <td class="bl_boardList_table_regDate" th:text="${#temporals.format(item.regDate, 'yyyy-MM-dd')}"></td>  
+                        <td class="bl_boardList_table_title" th:text="${item.title}"></td>  
+                    </tr>                
+				</tbody>            
+			</table>            
+			<div class="bl_boardList_page">  
+				<span th:if="${boardList.prevPage != null}" class="bl_boardList_page_prev"> 
+					<a th:id="${boardList.prevPage}" th:href="@{/pnpsecure/admin/board/boardList(currentPage=${boardList.prevPage})}"><</a>  
+				</span>                
+				<span class="bl_boardList_page_num" th:each="num : ${#numbers.sequence(boardList.pageStart, boardList.pageEnd)}">  
+					<a th:id="${num}" th:href="@{/pnpsecure/admin/board/boardList(currentPage=${num})}" th:text="${num+1}">
+					</a>  
+				</span>                
+				<span th:if="${boardList.nextPage != null}" class="bl_boardList_page_prev">  				
+					<a th:id="${boardList.nextPage}" th:href="@{/pnpsecure/admin/board/boardList(currentPage=${boardList.nextPage})}">>
+					</a>  
+				</span>            
+			</div>        
+		</div>    
+	</div>
+</body>  
+</html>
+~~~

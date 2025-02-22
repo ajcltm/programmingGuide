@@ -19,14 +19,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;  
   
 @Log  
+@Component  
+@WebFilter(urlPatterns = "pnpsecure/admin/*")  
 public class LoginFilter implements Filter {  
   
-    private final MemberService service;  
-  
-    // 생성자 주입 방식 사용 (Autowired 제거)  
-    public LoginFilter(MemberService service) {  
-        this.service = service;  
-    }  
+    @Autowired  
+    MemberService service;  
   
     @Override  
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {  
@@ -100,32 +98,6 @@ public class LoginFilter implements Filter {
             }  
         }  
         return null;  
-    }  
-}
-~~~
-
-### Config
----
-- filter는 스프링에 의해 관리되지 않아서 직접 bean 등록을 해야 이상한 에러를 방지할 수 있음
-
-~~~java
-package org.hgtech.pnpsecure.config;  
-  
-import org.hgtech.pnpsecure.filter.LoginFilter;  
-import org.hgtech.pnpsecure.service.MemberService;  
-import org.springframework.boot.web.servlet.FilterRegistrationBean;  
-import org.springframework.context.annotation.Bean;  
-import org.springframework.context.annotation.Configuration;  
-  
-@Configuration  
-public class FilterConfig {  
-  
-    @Bean  
-    public FilterRegistrationBean<LoginFilter> loggingFilter(MemberService memberService) {  
-        FilterRegistrationBean<LoginFilter> registrationBean = new FilterRegistrationBean<>();  
-        registrationBean.setFilter(new LoginFilter(memberService)); // 직접 주입  
-        registrationBean.addUrlPatterns("/pnpsecure/admin/*"); // 명시적으로 URL 패턴 설정  
-        return registrationBean;  
     }  
 }
 ~~~

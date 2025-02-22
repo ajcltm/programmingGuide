@@ -1842,3 +1842,49 @@ fileInput.addEventListener('change', () => {
 	});  
 });
 ~~~
+
+### CKEditer 적용
+---
+~~~html
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <link rel="stylesheet" href="/css/style_adminBoardRegister.css">  
+    <script src="https://cdn.ckeditor.com/ckeditor5/29.1.0/classic/ckeditor.js"></script>  
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/translations/ko.js"></script>  
+    <title>Title</title>
+    <!-- 넓이 높이 조절 --> 
+    <style> 
+	    .ck.ck-editor { max-width: 500px; } 
+	    .ck-editor__editable { min-height: 300px; } 
+	</style>
+</head>  
+<body>  
+<main class="ly_main">  
+    <div class="ly_main_inner">  
+        <form class="bl_boardForm">  
+            <div class="bl_boardForm_input">  
+                <textarea class="bl_boardForm_text" id="bl_boardForm_text"></textarea>  
+            </div>            
+            <div class="bl_boardForm_input">  
+                <input type="file" class="bl_boardForm_file">  
+            </div>            
+            <div class="bl_boardFrom_util">  
+                <button type="submit">등록</button>  
+            </div>        
+		</form>    
+	</div>
+</main>  
+</body>  
+<script>  
+    ClassicEditor  
+        .create( document.querySelector('#bl_boardForm_text'), {  
+            language: "ko"  
+        })  
+        .catch( error => {  
+            console.error( error );  
+        } );  
+</script>  
+</html>
+~~~
